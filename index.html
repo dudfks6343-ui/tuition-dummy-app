@@ -89,6 +89,21 @@
   .os-step.pick{border-color:var(--green); background:var(--green-bg);} .os-step.pick b{color:var(--green);}
   .os-final{margin-top:10px; padding:12px 14px; background:var(--navy); color:#fff; border-radius:8px; font-size:15px;}
   .os-final b{font-size:19px;} .os-final span[style]{color:#c9d6e6 !important;}
+
+  /* ===== 화면 구성 보강 ===== */
+  .tabs{position:sticky; top:0; z-index:30; padding:8px 0; background:#f4f6f9;}
+  .tab{transition:background .15s;}
+  .tab:not(.active):hover{background:#eef2f9;}
+  .tablewrap{max-height:62vh; overflow:auto;}
+  .tablewrap th{position:sticky; top:0; background:#fff; z-index:2;}
+  .tablewrap td{white-space:nowrap;}
+  .tablewrap tbody tr:nth-child(even){background:#fafbfd;}
+  .tablewrap tbody tr:hover{background:#eef3fc;}
+  .stat{box-shadow:0 1px 3px rgba(15,42,74,.06);}
+  .stat .n{font-size:26px;}
+  .tblsearch{width:100%; max-width:320px; height:34px; padding:0 12px; border:1px solid var(--line); border-radius:8px; font-size:13px; margin:0 0 10px;}
+  .tblcount{font-size:12px; color:var(--sub); margin-left:10px;}
+  @media(max-width:700px){.statgrid{grid-template-columns:repeat(2,1fr);} .tab{padding:8px 10px; font-size:13px;}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -2597,6 +2612,38 @@ renderEmp();
 renderPay();
 populateSummaryYearSelectors();
 renderSummary();
+</script>
+<script>
+/* 화면 구성 보강: 처리 안내 기본 접기 + 표 검색 */
+(function(){
+  function init(){
+    try{
+      var g=document.getElementById('processGuide');
+      if(g && typeof toggleProcessGuide==='function'){
+        var icon=document.getElementById('processToggleIcon');
+        if(icon && icon.textContent.indexOf('접기')>-1) toggleProcessGuide();
+      }
+    }catch(e){}
+    document.querySelectorAll('.tablewrap').forEach(function(w){
+      var tb=w.querySelector('table'); if(!tb || w.closest('.modal-bg')) return;
+      if(w.previousElementSibling && w.previousElementSibling.classList.contains('tblsearch')) return;
+      var inp=document.createElement('input'); inp.className='tblsearch'; inp.placeholder='🔍 검색 (이름·학교 등)';
+      var cnt=document.createElement('span'); cnt.className='tblcount';
+      var wrap=document.createElement('div'); wrap.appendChild(inp); wrap.appendChild(cnt);
+      wrap.className='tblsearch-wrap'; w.parentNode.insertBefore(wrap,w);
+      function apply(){
+        var q=inp.value.trim().toLowerCase(), rows=tb.querySelectorAll('tbody tr'), n=0;
+        rows.forEach(function(r){var ok=!q||r.textContent.toLowerCase().indexOf(q)>-1; r.style.display=ok?'':'none'; if(ok)n++;});
+        cnt.textContent=rows.length?(n+' / '+rows.length+'건'):'';
+      }
+      inp.addEventListener('input',apply);
+      var tbody=tb.querySelector('tbody');
+      if(tbody) new MutationObserver(apply).observe(tbody,{childList:true});
+      apply();
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
 </script>
 </body>
 </html>
