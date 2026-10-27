@@ -95,37 +95,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 </head>
 <body>
-<div id="pwGate" style="position:fixed;inset:0;z-index:99999;background:#f3f5f9;display:flex;align-items:center;justify-content:center;font-family:'Malgun Gothic',sans-serif">
-<div style="background:#fff;padding:32px 28px;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.12);text-align:center;width:280px">
-<div style="font-size:18px;font-weight:bold;margin-bottom:6px">🔒 학자금 관리</div>
-<div style="font-size:13px;color:#6b7488;margin-bottom:16px">비밀번호 4자리를 입력하세요</div>
-<input id="pwIn" type="password" inputmode="numeric" maxlength="4" autofocus style="width:100%;padding:12px;font-size:22px;letter-spacing:10px;text-align:center;border:1px solid #d5dbe6;border-radius:10px">
-<div id="pwErr" style="color:#d33;font-size:13px;height:18px;margin-top:8px"></div>
-</div></div>
-<script>
-(function(){var g=document.getElementById('pwGate'),i=document.getElementById('pwIn'),e=document.getElementById('pwErr');
-try{if(sessionStorage.getItem('pwOk')==='1'){g.remove();return;}}catch(x){}
-i.addEventListener('input',function(){if(i.value.length<4)return;
-if(i.value==='1111'){try{sessionStorage.setItem('pwOk','1')}catch(x){}g.remove();}
-else{e.textContent='비밀번호가 맞지 않아요';i.value='';}});})();
-</script>
 
 <div id="__gate" style="position:fixed;inset:0;background:#0f2a4a;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:'Pretendard','Malgun Gothic',sans-serif;">
   <div style="background:#fff;color:#1c2733;padding:32px 28px;border-radius:12px;max-width:320px;width:90%;text-align:center;">
     <div style="font-weight:700;margin-bottom:14px;">학자금 관리 — 비밀번호 입력</div>
-    <input id="__gate_pw" type="password" style="width:100%;height:38px;border:1px solid #dfe4ea;border-radius:6px;padding:0 10px;font-size:14px;box-sizing:border-box;margin-bottom:10px;" placeholder="비밀번호">
+    <input id="__gate_pw" type="password" style="width:100%;height:38px;border:1px solid #dfe4ea;border-radius:6px;padding:0 10px;font-size:14px;box-sizing:border-box;margin-bottom:10px;" placeholder="비밀번호 4자리">
     <button onclick="__gateCheck()" style="width:100%;height:38px;background:#0f2a4a;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">확인</button>
     <div id="__gate_err" style="color:#b3392f;font-size:12px;margin-top:8px;display:none;">비밀번호가 틀렸습니다.</div>
   </div>
 </div>
 <script>
   (function(){
-    var PW = "sinokor1!";
+    var PW = "1111";
     if (sessionStorage.getItem("__gate_ok") === "1") { document.getElementById("__gate") && (document.getElementById("__gate").style.display="none"); }
   })();
   function __gateCheck(){
     var v = document.getElementById("__gate_pw").value;
-    if (v === "sinokor1!") {
+    if (v === "1111") {
       sessionStorage.setItem("__gate_ok","1");
       document.getElementById("__gate").style.display = "none";
     } else {
