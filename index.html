@@ -1,79 +1,2601 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>학자금 한눈에 보기 (더미)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가온해운·누리라인 학자금 관리</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:"Malgun Gothic",sans-serif;background:#f3f5f9;color:#1d2433}
-.wrap{max-width:960px;margin:0 auto;padding:20px 16px}
-h1{font-size:22px;margin:0 0 4px}
-.sub{color:#6b7488;font-size:13px;margin-bottom:16px}
-.tabs{display:flex;gap:8px;margin-bottom:16px}
-.tabs button{flex:1;padding:12px;border:0;border-radius:10px;background:#fff;font-size:16px;font-weight:bold;cursor:pointer;color:#6b7488}
-.tabs button.on{background:#2f6df6;color:#fff}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.card{background:#fff;border-radius:12px;padding:14px;text-align:center}
-.card b{display:block;font-size:26px;margin-top:4px}
-.card span{font-size:12px;color:#6b7488}
-.card.ok b{color:#1a9d5a}.card.wait b{color:#e08a00}
-input{width:100%;padding:12px;border:1px solid #d5dbe6;border-radius:10px;font-size:15px;margin-bottom:12px}
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
-th{background:#e9eef8;font-size:13px;padding:10px;text-align:left}
-td{padding:11px 10px;border-top:1px solid #eef1f6;font-size:14px}
-td.n{text-align:right;font-weight:bold}
-.tag{padding:3px 9px;border-radius:99px;font-size:12px;font-weight:bold}
-.tag.ok{background:#dff5e8;color:#1a9d5a}.tag.wait{background:#fff0d6;color:#c77700}
-@media(max-width:600px){.cards{grid-template-columns:repeat(2,1fr)}td,th{font-size:12px;padding:8px 6px}}
+  :root{
+    --navy:#0f2a4a; --navy-2:#163a63; --line:#dfe4ea; --bg:#f5f7f9;
+    --ink:#1c2733; --sub:#5b6b7d; --card:#ffffff;
+    --amber:#c07a1e; --amber-bg:#fbf1e2;
+    --red:#b3392f; --red-bg:#fbeceb;
+    --green:#2f7a4f; --green-bg:#eaf5ee;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:"Pretendard","Malgun Gothic",-apple-system,sans-serif; background:var(--bg); color:var(--ink);}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy-2)); color:#fff; padding:28px 32px;}
+  header h1{margin:0 0 4px; font-size:22px; font-weight:700;}
+  header p{margin:0; font-size:13px; color:#c9d6e6;}
+  .wrap{max-width:1120px; margin:0 auto; padding:24px 20px 60px;}
+  .rulebar{background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:20px; font-size:13px; color:var(--sub); display:flex; gap:22px; flex-wrap:wrap;}
+  .rulebar b{color:var(--ink);}
+  .tabs{display:flex; gap:8px; margin-bottom:18px;}
+  .tab{padding:9px 18px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; background:#fff; border:1px solid var(--line); color:var(--sub);}
+  .tab.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .subtabs{display:flex; gap:6px; margin-bottom:14px;}
+  .subtab{padding:6px 14px; border-radius:20px; font-size:12.5px; font-weight:600; cursor:pointer; background:#eef1f6; color:var(--sub); border:1px solid transparent;}
+  .subtab.active{background:#dfe9f7; color:var(--navy); border-color:#b9cfe8;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:18px;}
+  .card h2{font-size:15px; margin:0 0 14px; color:var(--navy);}
+  label{font-size:12px; color:var(--sub); display:block; margin-bottom:4px;}
+  input,select{width:100%; height:36px; border:1px solid var(--line); border-radius:6px; padding:0 10px; font-size:14px; background:#fff;}
+  button.primary{background:var(--navy); color:#fff; border:none; height:38px; padding:0 18px; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer;}
+  button.primary:hover{background:var(--navy-2);}
+  button.ghost{background:#fff; border:1px solid var(--line); height:34px; padding:0 12px; border-radius:6px; font-size:13px; cursor:pointer; color:var(--sub);}
+  table{width:100%; border-collapse:collapse; font-size:12.8px;}
+  th{text-align:left; padding:8px 8px; color:var(--sub); font-weight:600; border-bottom:2px solid var(--line); white-space:nowrap;}
+  td{padding:8px 8px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  tr:hover td{background:#f9fafb;}
+  .pill{display:inline-block; padding:2px 9px; border-radius:20px; font-size:11px; font-weight:700; white-space:nowrap;}
+  .pill.ok{background:var(--green-bg); color:var(--green);}
+  .pill.over{background:var(--red-bg); color:var(--red);}
+  .pill.sem{background:#eef1f6; color:var(--navy);}
+  .stat{background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 16px;}
+  .stat .n{font-size:22px; font-weight:700; color:var(--navy);}
+  .stat .l{font-size:12px; color:var(--sub); margin-top:2px;}
+  .statgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;}
+  .toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+  .empty{text-align:center; color:var(--sub); font-size:13px; padding:30px 0;}
+  .rowactions{display:flex; gap:6px;}
+  .banner{background:var(--amber-bg); border:1px solid #eccf9f; color:#7a4d0d; border-radius:8px; padding:10px 14px; font-size:12.5px; margin-bottom:16px;}
+  .process-steps{display:flex; align-items:stretch; gap:8px; flex-wrap:wrap;}
+  .pstep{flex:1; min-width:170px; background:#f0f4fa; border:1px solid #dbe4f0; border-radius:10px; padding:10px 12px;}
+  .pnum{display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--navy); color:#fff; font-size:12px; font-weight:700; margin-bottom:6px;}
+  .ptext{font-size:12px; line-height:1.5; color:var(--ink);}
+  .parrow{display:flex; align-items:center; justify-content:center; color:var(--sub); font-size:16px; padding:0 2px;}
+  @media (max-width:900px){ .parrow{display:none;} }
+  .modal-bg{position:fixed; inset:0; display:none; background:rgba(15,42,74,.45); padding:20px; z-index:1000; overflow-y:auto;}
+  .modal-bg.show{display:flex; justify-content:center; align-items:flex-start;}
+  .modal{background:#fff; border-radius:12px; padding:22px; width:100%; max-width:520px; max-height:calc(100vh - 40px); overflow:auto; margin-top:5vh;}
+  .modal h3{margin:0 0 14px; font-size:15px; color:var(--navy);}
+  .modalgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px 12px; margin-bottom:16px;}
+  .full{grid-column:1/-1;}
+  footer{max-width:1120px; margin:0 auto; padding:0 20px 40px; font-size:11.5px; color:#93a0ae;}
+  .tablewrap{overflow-x:auto;}
+  .coswitch{padding:8px 16px; border-radius:8px; font-size:13.5px; font-weight:700; cursor:pointer; background:rgba(255,255,255,.12); color:#dbe6f2; border:1px solid rgba(255,255,255,.25);}
+  .coswitch.active{background:#fff; color:var(--navy); border-color:#fff;}
+  .os-sec{border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px;}
+  .os-sec-h{font-size:13.5px; font-weight:700; color:var(--navy); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .os-drop{border:2px dashed #c5d0dd; border-radius:10px; padding:20px; text-align:center; cursor:pointer; background:#fafbfc; color:var(--sub);}
+  .os-drop.over{background:#eef3fa; border-color:var(--navy);}
+  .os-chip{display:inline-flex; align-items:center; gap:6px; background:#eef1f6; border-radius:16px; padding:4px 10px; font-size:11.5px; color:var(--ink);}
+  .os-chip b{color:var(--navy); font-size:10.5px;} .os-chip a{cursor:pointer; color:var(--sub);}
+  .os-status{font-size:12px; color:var(--ink); margin-top:8px; line-height:1.6;}
+  .os-grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:8px 10px;}
+  .os-span2{grid-column:span 2;}
+  @media (max-width:760px){ .os-grid4{grid-template-columns:1fr 1fr;} }
+  .os-table input,.os-table select{height:30px; font-size:12.5px; padding:0 6px;}
+  .os-table td{padding:4px 4px;}
+  .os-table button{white-space:nowrap;}
+  .os-table tr.os-row-tuition td{background:#f1f8f3;}
+  .os-table tr.os-row-scholarship td{background:#fdf6ea;}
+  .os-table tr.os-row-payment td input{color:var(--sub);}
+  .os-calc{margin-top:10px;}
+  .os-calc-t{font-size:12.5px;} .os-calc-t td{padding:5px 8px;} .os-calc-t td:first-child{color:var(--sub); width:34%;}
+  .os-steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px; margin-top:10px;}
+  .os-step{border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:11.5px; color:var(--sub);}
+  .os-step b{display:block; font-size:14px; color:var(--ink); margin-top:3px;}
+  .os-step.pick{border-color:var(--green); background:var(--green-bg);} .os-step.pick b{color:var(--green);}
+  .os-final{margin-top:10px; padding:12px 14px; background:var(--navy); color:#fff; border-radius:8px; font-size:15px;}
+  .os-final b{font-size:19px;} .os-final span[style]{color:#c9d6e6 !important;}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 </head>
 <body>
-<div class="wrap">
-  <h1>자녀 학자금 한눈에 보기</h1>
-  <div class="sub">※ 모든 이름·학교·금액은 가상의 예시입니다 (2026년 2학기)</div>
-  <div class="tabs" id="tabs"></div>
-  <div class="cards" id="cards"></div>
-  <input id="q" placeholder="직원·자녀·학교 검색">
-  <table>
-    <thead><tr><th>직원</th><th>자녀</th><th>학교</th><th>학기</th><th style="text-align:right">금액(만원)</th><th>상태</th></tr></thead>
-    <tbody id="rows"></tbody>
-  </table>
+<div id="__gate" style="position:fixed;inset:0;background:#0f2a4a;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:'Pretendard','Malgun Gothic',sans-serif;">
+  <div style="background:#fff;color:#1c2733;padding:32px 28px;border-radius:12px;max-width:320px;width:90%;text-align:center;">
+    <div style="font-weight:700;margin-bottom:14px;">학자금 관리 — 비밀번호 입력</div>
+    <input id="__gate_pw" type="password" style="width:100%;height:38px;border:1px solid #dfe4ea;border-radius:6px;padding:0 10px;font-size:14px;box-sizing:border-box;margin-bottom:10px;" placeholder="비밀번호">
+    <button onclick="__gateCheck()" style="width:100%;height:38px;background:#0f2a4a;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">확인</button>
+    <div id="__gate_err" style="color:#b3392f;font-size:12px;margin-top:8px;display:none;">비밀번호가 틀렸습니다.</div>
+  </div>
 </div>
 <script>
-const DATA={
- "가온해운":[
-  ["김민준","김서연","한빛대학교 경영학과","3학년 1학기",250,1],
-  ["이도현","이하윤","새론대학교 컴퓨터공학과","2학년 1학기",350,1],
-  ["박지훈","박예린","누리여자대학교 디자인학과","4학년 1학기",500,0],
-  ["최수아","최건우","푸른대학교 기계공학과","1학년 1학기",250,1],
-  ["정우진","정다온","한빛대학교 간호학과","2학년 1학기",350,0],
-  ["강하늘","강시우","미래대학교 건축학과","3학년 1학기",500,1]
- ],
- "누리라인":[
-  ["윤서진","윤채원","새론대학교 국어교육과","1학년 1학기",250,1],
-  ["장태민","장지안","푸른대학교 화학과","4학년 1학기",350,0],
-  ["임보람","임주원","한빛대학교 통계학과","2학년 1학기",250,1],
-  ["한도영","한소율","미래대학교 영상학과","3학년 1학기",350,1],
-  ["오세린","오이안","누리여자대학교 약학과","2학년 1학기",500,0]
- ]
+  (function(){
+    var PW = "sinokor1!";
+    if (sessionStorage.getItem("__gate_ok") === "1") { document.getElementById("__gate") && (document.getElementById("__gate").style.display="none"); }
+  })();
+  function __gateCheck(){
+    var v = document.getElementById("__gate_pw").value;
+    if (v === "sinokor1!") {
+      sessionStorage.setItem("__gate_ok","1");
+      document.getElementById("__gate").style.display = "none";
+    } else {
+      document.getElementById("__gate_err").style.display = "block";
+    }
+  }
+  document.addEventListener("DOMContentLoaded", function(){
+    if (sessionStorage.getItem("__gate_ok") === "1") {
+      var g = document.getElementById("__gate");
+      if (g) g.style.display = "none";
+    }
+    document.getElementById("__gate_pw").addEventListener("keydown", function(e){ if(e.key==="Enter") __gateCheck(); });
+  });
+</script>
+<header>
+  <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:14px;">
+    <div>
+      <h1 id="companyTitle">가온해운 자녀 학자금 관리</h1>
+      <p>총무팀 · 2026년 1학기 기존 데이터 보관 · 2학기부터 개정 규정 자동 적용</p>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+      <div id="companySwitch" style="display:flex; gap:6px;"></div>
+      <div style="display:flex; gap:6px; align-items:center; font-size:11.5px; color:#c9d6e6;">
+        <span id="saveStatus"></span>
+        <button class="coswitch" style="padding:4px 10px; font-size:11.5px;" onclick="downloadBackup()">💾 백업 받기</button>
+        <label class="coswitch" style="padding:4px 10px; font-size:11.5px; margin:0; color:#dbe6f2;">📂 백업 불러오기<input type="file" accept="application/json" style="display:none;" onchange="restoreBackup(this.files[0]); this.value='';"></label>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+
+  <div class="rulebar" id="rulebar"></div>
+  <div id="banner"></div>
+
+  <div class="card" id="processGuide" style="margin-top:0; margin-bottom:16px;">
+    <div class="toolbar" style="cursor:pointer;" onclick="toggleProcessGuide()">
+      <h2 style="margin:0;">📋 학자금 처리 프로세스 (Claude 자동화)</h2>
+      <span id="processToggleIcon" style="font-size:13px; color:var(--sub);">접기 ▲</span>
+    </div>
+    <div id="processGuideBody">
+      <div class="process-steps">
+        <div class="pstep">
+          <div class="pnum">1</div>
+          <div class="ptext"><b>전자결재 화면 + 영수증 전달</b><br>담당자가 결재 완료된 전자결재 캡처와 학자금 영수증(이미지/PDF)을 전달</div>
+        </div>
+        <div class="parrow">→</div>
+        <div class="pstep">
+          <div class="pnum">2</div>
+          <div class="ptext"><b>자동 판독 &amp; 금액 산출</b><br>영수증에서 학교·학기·수업료 인식 → 이 앱에 등록된 근속연수 기준 규정 상한과 비교해 <b>지급액 자동 확정</b></div>
+        </div>
+        <div class="parrow">→</div>
+        <div class="pstep">
+          <div class="pnum">3</div>
+          <div class="ptext"><b>전표 · 증빙엑셀 자동 생성</b><br>ERP 전표 업로드 양식(계좌정보 자동 매칭) + 학자금 정리 증빙엑셀을 형식 그대로 작성</div>
+        </div>
+        <div class="parrow">→</div>
+        <div class="pstep">
+          <div class="pnum">4</div>
+          <div class="ptext"><b>이 앱에 즉시 반영</b><br>신규/기존 직원 지급 내역이 바로 등록되어, 위 "직원·자녀 관리" · "직원별 요약" 탭에서 확인 가능</div>
+        </div>
+      </div>
+      <div style="margin-top:10px; padding:10px 12px; background:#f7f5ef; border-radius:8px; font-size:12px; color:var(--sub);">
+        🌏 <b>해외 대학:</b> "학기·분기별 지급 내역" 탭의 <b>해외 영수증 번역·정리</b>에 영수증 PDF와 전자결재 캡처를 올리면 항목 번역 → 수업료만 분리 → 환율·근속 상한 적용 → 지급 등록·전표·증빙(번역 시트 포함)까지 이어집니다.<br>
+        ✅ <b>준비 완료:</b> 가온해운 등록 직원 29명 전원 거래처코드·은행·계좌번호 저장 완료 — 영수증만 오면 바로 3종 세트(전표/증빙엑셀/앱 반영) 처리됩니다.
+      </div>
+    </div>
+  </div>
+  <div class="statgrid" id="stats"></div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="employees" onclick="switchTab('employees')">직원·자녀 관리</div>
+    <div class="tab" data-tab="payments" onclick="switchTab('payments')">학기·분기별 지급 내역</div>
+    <div class="tab" data-tab="summary" onclick="switchTab('summary')">직원별 요약</div>
+  </div>
+
+  <div id="tab-employees">
+    <div class="card">
+      <div class="subtabs">
+        <div class="subtab active" data-sub="all" onclick="setEmpFilter('all')">전체</div>
+        <div class="subtab" data-sub="대학교" onclick="setEmpFilter('대학교')">대학교</div>
+        <div class="subtab" data-sub="고등학교" onclick="setEmpFilter('고등학교')">고등학교</div>
+      </div>
+      <div class="toolbar">
+        <h2 style="margin:0;">직원 / 자녀 등록</h2>
+        <button class="primary" onclick="openEmpModal()">+ 신규 등록</button>
+      </div>
+      <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>직원명</th><th>입사일</th><th>근속연수</th><th>근속구간</th>
+          <th>자녀명</th><th>학교급</th><th>학제</th><th>연간한도/분기한도</th><th>학기당상한</th>
+          <th>최근 1학기(분기) 실지급</th><th>최근 2학기(분기) 실지급</th><th>비고</th><th></th>
+        </tr></thead>
+        <tbody id="empTable"></tbody>
+      </table>
+      </div>
+      <div class="empty" id="empEmpty" style="display:none;">등록된 직원/자녀가 없습니다. 신규 등록으로 시작하세요.</div>
+    </div>
+  </div>
+
+  <div id="tab-payments" style="display:none;">
+    <div class="card">
+      <div class="subtabs">
+        <div class="subtab active" data-psub="대학교" onclick="setPayFilter('대학교')">대학교 (학기)</div>
+        <div class="subtab" data-psub="고등학교" onclick="setPayFilter('고등학교')">고등학교 (분기)</div>
+      </div>
+      <div class="toolbar">
+        <h2 style="margin:0;" id="payTitle">대학교 학기별 지급 내역</h2>
+        <div style="display:flex; gap:8px;">
+          <button class="ghost" onclick="autoGenerateNextTerm()">2학기 청구예정액 자동생성</button>
+          <button class="ghost" onclick="openQuickModal()">📋 붙여넣기로 빠른 등록</button>
+          <button class="ghost" onclick="openOsModal()">🌏 해외 영수증 번역·정리</button>
+          <button class="primary" onclick="openPayModal()">+ 지급 등록</button>
+        </div>
+      </div>
+      <div class="subtabs" id="termFilterBar">
+        <div class="subtab active" data-tf="all" onclick="setTermFilter('all')">전체</div>
+        <div class="subtab" data-tf="1" onclick="setTermFilter('1')">1학기만</div>
+        <div class="subtab" data-tf="2" onclick="setTermFilter('2')">2학기만</div>
+      </div>
+      <div class="tablewrap">
+      <table id="payTableUni">
+        <thead><tr>
+          <th>학년도</th><th>학기</th><th>직원명</th><th>자녀명</th><th>학제</th><th>학년-학기</th>
+          <th>신청금액</th><th>학기당상한 체크</th><th>연간누적</th><th>지원학기 체크</th><th>서류</th><th></th>
+        </tr></thead>
+        <tbody id="payTableUniBody"></tbody>
+      </table>
+      <table id="payTableHs" style="display:none;">
+        <thead><tr>
+          <th>학년도</th><th>분기</th><th>직원명</th><th>자녀명</th><th>학교</th>
+          <th>신청금액</th><th>분기 한도체크(50만원)</th><th>서류</th><th></th>
+        </tr></thead>
+        <tbody id="payTableHsBody"></tbody>
+      </table>
+      </div>
+      <div class="empty" id="payEmpty" style="display:none;">등록된 지급 내역이 없습니다.</div>
+    </div>
+  </div>
+
+  <div id="tab-summary" style="display:none;">
+    <div class="card">
+      <div class="toolbar">
+        <h2 style="margin:0;">대학교 — 직원별 학기 지급 요약</h2>
+        <div><label style="font-size:12px; color:var(--sub); margin-right:6px;">연도</label>
+          <select id="sum_year_uni" onchange="renderSummary()"></select>
+        </div>
+      </div>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>직원명</th><th>자녀명</th><th>학제</th><th>1학기 실제지급</th><th>1학기 상한(지급기준)</th><th>2학기 실제지급</th><th>2학기 상한(지급기준)</th><th>연간 실제합계</th><th>연간한도</th><th>한도 매칭</th></tr></thead>
+        <tbody id="summaryUniTable"></tbody>
+      </table>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <div class="toolbar">
+        <h2 style="margin:0;">고등학교 — 직원별 분기 지급 요약</h2>
+        <div><label style="font-size:12px; color:var(--sub); margin-right:6px;">연도</label>
+          <select id="sum_year_hs" onchange="renderSummary()"></select>
+        </div>
+      </div>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>직원명</th><th>자녀명</th><th>1분기<br>실제/상한</th><th>2분기<br>실제/상한</th><th>3분기<br>실제/상한</th><th>4분기<br>실제/상한</th><th>연간 실제합계</th></tr></thead>
+        <tbody id="summaryHsTable"></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>입력한 내용은 이 PC의 브라우저에 자동 저장돼요 (같은 브라우저로 열면 새 버전 HTML에서도 그대로 보여요). 다른 PC·브라우저로 옮기거나 혹시 모를 삭제에 대비하려면 위의 "백업 받기"로 파일을 받아두세요. 가온해운·누리라인 데이터는 각각 독립적으로 관리되며, 상단 스위처로 전환해도 서로 섞이지 않습니다. 2026년 1학기 데이터는 업로드하신 엑셀 파일을 기준으로 미리 반영되어 있습니다.</footer>
+
+<div class="modal-bg" id="empModalBg">
+  <div class="modal">
+    <h3 id="empModalTitle">직원 / 자녀 등록</h3>
+    <div class="modalgrid">
+      <div><label>직원명</label><input id="f_empName" placeholder="홍길동"></div>
+      <div><label>입사일 (또는 그룹입사일)</label><input id="f_hireDate" type="date"></div>
+      <div><label>자녀명</label><input id="f_childName" placeholder="홍철수"></div>
+      <div><label>학교급</label>
+        <select id="f_schoolLevel" onchange="toggleUniFields()">
+          <option value="대학교">대학교</option>
+          <option value="고등학교">고등학교</option>
+          <option value="해외-로컬">해외직원(로컬학교)</option>
+          <option value="해외-국제">해외직원(국제학교)</option>
+        </select>
+      </div>
+      <div id="f_uniTypeWrap"><label>학제</label>
+        <select id="f_uniType">
+          <option value="2">2년제</option>
+          <option value="3">3년제</option>
+          <option value="4">4년제</option>
+          <option value="5">5년제 (지원 8학기)</option>
+        </select>
+      </div>
+      <div id="f_gradeWrap"><label>현재 학년</label>
+        <select id="f_grade"><option value="1">1학년</option><option value="2">2학년</option><option value="3">3학년</option><option value="4">4학년</option></select>
+      </div>
+      <div class="full"><label>비고 (학교명 등)</label><input id="f_note" placeholder="선택 입력"></div>
+    </div>
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button class="ghost" onclick="closeEmpModal()">취소</button>
+      <button class="primary" onclick="saveEmp()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="payModalBg">
+  <div class="modal">
+    <h3 id="payModalTitle">지급 등록</h3>
+    <div class="modalgrid">
+      <div class="full"><label>대상 직원·자녀</label>
+        <select id="p_target" onchange="prefillPay(true)"></select>
+      </div>
+      <div><label>학년도</label><input id="p_year" type="number" value="2026" onchange="prefillPay(true)"></div>
+      <div id="p_termWrap"><label>학기</label>
+        <select id="p_term" onchange="prefillPay()"><option value="1">1학기</option><option value="2">2학기</option></select>
+      </div>
+      <div id="p_quarterWrap" style="display:none;"><label>분기</label>
+        <select id="p_quarter"><option value="1">1분기</option><option value="2">2분기</option><option value="3">3분기</option><option value="4">4분기</option></select>
+      </div>
+      <div><label>신청금액(원 단위로 입력, 예: 5000000)</label><input id="p_amount" type="text" inputmode="numeric" placeholder="예: 5,000,000 (쉼표 넣어도 됩니다)"></div>
+      <div class="full" style="display:flex; align-items:center; gap:6px;">
+        <input type="checkbox" id="p_isLeave" onchange="toggleLeaveMode()">
+        <label for="p_isLeave" style="margin:0; cursor:pointer;">이 학기(분기)는 휴학 — 지급 없음</label>
+      </div>
+    </div>
+    <div id="p_ruleHint" style="font-size:12px; color:var(--sub); margin-bottom:6px;"></div>
+    <div style="margin-bottom:14px;"><button class="ghost" style="font-size:11px; padding:4px 10px;" onclick="applySuggestedAmount()">💡 연간한도 기준 권장 금액 적용</button></div>
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button class="ghost" onclick="closePayModal()">취소</button>
+      <button class="primary" onclick="savePay()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="quickModalBg">
+  <div class="modal" style="max-width:640px;">
+    <h3>📋 자동 등록 (PDF 업로드 또는 텍스트 붙여넣기)</h3>
+
+    <div id="q_dropzone" style="border:2px dashed var(--line); border-radius:10px; padding:18px; text-align:center; margin-bottom:12px; cursor:pointer; background:#fafafa;"
+         onclick="document.getElementById('q_pdf_input').click()">
+      <div style="font-size:13px; color:var(--sub);">📄 전자결재 PDF를 여기로 드래그하거나 클릭해서 선택하세요</div>
+      <div style="font-size:11px; color:var(--sub); margin-top:4px;">텍스트가 포함된 PDF만 인식됩니다 (스캔 이미지 PDF는 안 됨)</div>
+      <input type="file" id="q_pdf_input" accept="application/pdf" style="display:none;" onchange="handlePdfFile(this.files[0])">
+    </div>
+    <div id="q_pdf_status" style="font-size:12px; color:var(--sub); margin-bottom:10px;"></div>
+
+    <details style="margin-bottom:10px;">
+      <summary style="cursor:pointer; font-size:12px; color:var(--sub);">또는 텍스트 직접 붙여넣기</summary>
+      <textarea id="q_text" rows="4" style="width:100%; font-family:inherit; font-size:13px; padding:8px; border:1px solid var(--line); border-radius:6px; margin-top:8px;" placeholder="전자결재 내용을 통째로 붙여넣어도 됩니다" oninput="scanTextForCandidates()"></textarea>
+    </details>
+
+    <div id="q_candidates_wrap" style="display:none;">
+      <div style="font-size:12px; color:var(--sub); margin:10px 0 6px;">인식된 항목 — 학기/분기·금액을 확인하고 등록할 항목만 체크하세요</div>
+      <div id="q_candidates_list"></div>
+    </div>
+    <div id="q_result" style="margin:10px 0; padding:10px 12px; background:#f7f5ef; border-radius:8px; font-size:13px; min-height:20px;">PDF를 올리거나 텍스트를 붙여넣으면 여기에 인식 결과가 표시됩니다.</div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button class="ghost" onclick="closeQuickModal()">취소</button>
+      <button class="primary" id="q_saveBtn" onclick="quickSaveAll()" disabled>선택 항목 등록</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="osModalBg">
+  <div class="modal" style="max-width:980px;">
+    <div class="toolbar" style="margin-bottom:6px;">
+      <h3 style="margin:0;">🌏 해외 대학 영수증 번역·규정 정리</h3>
+      <button class="ghost" onclick="closeOsModal()">닫기</button>
+    </div>
+    <div style="font-size:12px; color:var(--sub); margin-bottom:14px;">해외 학교 영수증(PDF)과 전자결재 캡처를 올리면 항목을 한글로 번역하고, 수업료만 골라 환율·근속 구간·연간한도를 적용한 지급액을 계산합니다.</div>
+
+    <div class="os-sec">
+      <div class="os-sec-h">1. 증빙 올리기</div>
+      <div id="os_dropzone" class="os-drop" onclick="document.getElementById('os_file_input').click()">
+        <div style="font-size:13px;">📎 영수증 PDF · 전자결재 캡처(이미지/PDF)를 여기로 끌어오거나 클릭해서 선택 — 여러 개 한 번에 가능</div>
+        <input type="file" id="os_file_input" multiple accept="application/pdf,image/png,image/jpeg,image/webp" style="display:none;" onchange="osHandleFiles(this.files); this.value='';">
+      </div>
+      <div id="os_files" style="display:flex; gap:6px; flex-wrap:wrap; margin:8px 0;"></div>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <button class="primary" id="os_ai_btn" onclick="osRunAI()" style="height:34px;">🤖 Claude로 판독·번역</button>
+        <span style="font-size:11.5px; color:var(--sub);">PDF 영수증은 올리는 즉시 기본 판독됩니다. 전자결재 캡처(이미지)까지 읽으려면 Claude 판독을 누르세요.</span>
+      </div>
+      <div id="os_status" class="os-status"></div>
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer; font-size:12px; color:var(--sub);">전자결재 내용을 텍스트로 붙여넣기 (이미지 판독이 안 될 때)</summary>
+        <textarea id="os_appr_text" rows="4" style="width:100%; font-family:inherit; font-size:12.5px; padding:8px; border:1px solid var(--line); border-radius:6px; margin-top:6px;" placeholder="학자금지급신청서 내용을 복사해서 붙여넣으면 입사일·자녀명·학제·신청금액·계좌를 읽어옵니다" oninput="osApplyApprovalText(this.value)"></textarea>
+      </details>
+    </div>
+
+    <div class="os-sec" id="os_sec_receipt" style="display:none;">
+      <div class="os-sec-h">2. 영수증 번역 <span id="os_src_badge"></span></div>
+      <div class="os-grid4" id="os_header_fields"></div>
+      <div class="tablewrap" style="margin-top:10px;">
+        <table class="os-table">
+          <thead><tr><th style="width:24%">원문 항목</th><th style="width:26%">한글 번역</th><th style="width:13%">금액(<span class="os-cur">-</span>)</th><th style="width:15%">구분</th><th>판단 근거</th><th></th></tr></thead>
+          <tbody id="os_items"></tbody>
+        </table>
+      </div>
+      <button class="ghost" style="font-size:11.5px; height:28px; margin-top:6px;" onclick="osAddItem()">+ 항목 추가</button>
+      <div id="os_notes"></div>
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer; font-size:12px; color:var(--sub);">규정 판단 기준 보기 — 수업료만 지원</summary>
+        <div style="font-size:12px; line-height:1.7; color:var(--ink); padding:8px 4px;">
+          판단 기준은 이름이 아니라 <b>"강의·학점 이수의 대가로 내는 돈인가"</b>입니다. 애매하면 제외하고 <span class="pill over">확인</span>을 붙입니다.<br>
+          <b style="color:var(--green);">지원:</b> Tuition, 학점당 수업료(Credit hour·Unit), Instruction·Academic Fee, 전공별 추가 수업료(Differential), 별도 Tuition이 없을 때의 Course·Programme Fee<br>
+          <b style="color:#a56b00;">차감:</b> 장학금·감면(Scholarship, Waiver, Discount)<br>
+          <b style="color:var(--red);">제외:</b> College Fee(운영 부담금), Registration Fee(행정 수수료), 기숙사비, 각종 보증금, 학생회비, 활동비, 보험·의료비, 식비, 교재비, 실습비, 전산·시설 부담금, 전형료, 연체료<br>
+          <b style="color:var(--red);">제외+확인:</b> 수업료와 기타비용 합산액(명세서 요청), Tuition Deposit(이중 지급 확인), 사전에 없는 항목
+        </div>
+      </details>
+    </div>
+
+    <div class="os-sec" id="os_sec_emp" style="display:none;">
+      <div class="os-sec-h">3. 지급 대상 (<span id="os_company_label"></span>)</div>
+      <div style="display:flex; gap:16px; font-size:13px; margin-bottom:10px;">
+        <label style="display:flex; align-items:center; gap:6px; margin:0; font-size:13px; color:var(--ink); cursor:pointer;"><input type="radio" name="os_empmode" value="existing" style="width:auto; height:auto;" onchange="osSetEmpMode('existing')"> 등록된 직원·자녀</label>
+        <label style="display:flex; align-items:center; gap:6px; margin:0; font-size:13px; color:var(--ink); cursor:pointer;"><input type="radio" name="os_empmode" value="new" style="width:auto; height:auto;" onchange="osSetEmpMode('new')"> 신규 등록 (해외 대학)</label>
+      </div>
+      <div id="os_emp_existing"><select id="os_emp_select" onchange="osState.empId=this.value; osRecalc();"></select></div>
+      <div id="os_emp_new" class="os-grid4" style="display:none;"></div>
+    </div>
+
+    <div class="os-sec" id="os_sec_calc" style="display:none;">
+      <div class="os-sec-h">4. 규정 적용 · 지급액</div>
+      <div class="os-grid4">
+        <div><label>회사 기준 연도</label><input type="number" id="os_comp_year" onchange="osState.compYear=parseInt(this.value)||null; osRecalc();"></div>
+        <div><label>회사 기준 학기</label><select id="os_comp_term" onchange="osState.compTerm=parseInt(this.value); osRecalc();"><option value="1">1학기</option><option value="2">2학기</option></select></div>
+        <div><label>적용 환율 (원 / <span class="os-cur">-</span>)</label>
+          <div style="display:flex; gap:4px;"><input type="text" inputmode="decimal" id="os_fx" placeholder="예: 178.52" oninput="osSyncInputs(); osRecalc();">
+          <button class="ghost" style="height:36px; white-space:nowrap; font-size:12px;" onclick="osFetchFx()">조회</button></div>
+        </div>
+        <div><label>신청금액 (전자결재, 원)</label><input type="text" inputmode="numeric" id="os_req" placeholder="예: 5,000,000" oninput="osSyncInputs(); osRecalc();"></div>
+      </div>
+      <div id="os_term_note" style="font-size:11.5px; color:#a56b00; margin-top:6px;"></div>
+      <div id="os_calc" class="os-calc"></div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; margin-top:4px;">
+      <button class="ghost" onclick="closeOsModal()">취소</button>
+      <button class="ghost" id="os_btn_xlsx" onclick="osDownloadTranslation()" disabled>📥 번역 정리표 엑셀</button>
+      <button class="ghost" id="os_btn_print" onclick="osPrint()" disabled>🖨 번역본 인쇄</button>
+      <button class="primary" id="os_btn_save" onclick="osSave()" disabled>지급 등록 + 전표·증빙 만들기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORE = {"가온해운":{"employees":[{"id":"seed_u1","name":"한도윤","hire":"1998-11-19","child":"서현서","level":"대학교","uniType":"4","note":"단국대학교 국제스포츠학과 (3학년)","grade":3,"vendorCode":"018159","bank":"신한은행","account":"083-016-613186","acctSeq":"02"},{"id":"seed_u2","name":"이누리","hire":"1999-05-03","child":"류하준","level":"대학교","uniType":"4","note":"한성대학교 패션디자인트랙과 (4학년)","grade":4,"vendorCode":"390996","bank":"우리은행","account":"0308-246-281948","acctSeq":"02"},{"id":"seed_u3","name":"강하준","hire":"1999-07-05","child":"류태오","level":"대학교","uniType":"4","note":"서울대학교 불어교육과 (4학년)","grade":4,"vendorCode":"351819","bank":"신한은행","account":"093-786-579754","acctSeq":"02"},{"id":"seed_u4","name":"강하준","hire":"1999-07-05","child":"윤가람","level":"대학교","uniType":"2","note":"배화여자대학교 컴퓨터공학과 (1학년)","grade":1,"vendorCode":"351819","bank":"신한은행","account":"093-786-579754","acctSeq":"02"},{"id":"seed_u5","name":"강아린","hire":"1999-10-11","child":"윤지안","level":"대학교","uniType":"4","note":"성신여자대학교 AI 융합학부 (4학년)","grade":4,"vendorCode":"948757","bank":"신한은행","account":"491186252760","acctSeq":"01"},{"id":"seed_u6","name":"박보람","hire":"1999-11-08","child":"송태오","level":"대학교","uniType":"4","note":"광운대학교 컴퓨터정보공학부 (2학년)","grade":2,"vendorCode":"555979","bank":"우리은행","account":"7114710497465","acctSeq":"01"},{"id":"seed_u7","name":"김수빈","hire":"2000-07-05","child":"오서연","level":"대학교","uniType":"2","note":"백석예술대학교 실용댄스학과 (2학년)","grade":2,"vendorCode":"917034","bank":"국민은행","account":"236671-27-684268","acctSeq":"01"},{"id":"seed_u8","name":"장아린","hire":"2000-09-25","child":"신채원","level":"대학교","uniType":"4","note":"서울여자대학교 미래산업융합자유과 (2학년)","grade":2,"vendorCode":"632122","bank":"SC은행","account":"330-79-244026","acctSeq":"01"},{"id":"seed_u9","name":"송채원","hire":"2000-01-24","child":"전태오","level":"대학교","uniType":"4","note":"광운대학교 경영학부 빅데이터경영과 (1학년)","grade":1,"vendorCode":"528907","bank":"KEB하나은행","account":"86666176031372","acctSeq":"01"},{"id":"seed_u11","name":"최하윤","hire":"1999-03-17","child":"전서준","level":"대학교","uniType":"4","note":"세종대학교 체육학과 (1학년)","grade":1,"vendorCode":"109281","bank":"우리은행","account":"59013962459571","acctSeq":"01"},{"id":"seed_u12","name":"최한솔","hire":"2004-10-01","child":"황수빈","level":"대학교","uniType":"4","note":"덕성여자대학교 과학기술대학 (1학년)","grade":1,"vendorCode":"774121","bank":"국민은행","account":"547280385280","acctSeq":"01"},{"id":"seed_u13","name":"안지후","hire":"2001-10-17","child":"홍한솔","level":"대학교","uniType":"4","note":"경상대학교 경영학과 (2학년)","grade":2,"vendorCode":"148525","bank":"KEB하나은행","account":"388-85-39336-3","acctSeq":"01"},{"id":"seed_u14","name":"조이안","hire":"2003-02-10","child":"황채원","level":"대학교","uniType":"4","note":"연세대학교 행정학과 (4학년)","grade":4,"vendorCode":"004743","bank":"우리은행","account":"9575-513-137353","acctSeq":"01"},{"id":"seed_u15","name":"황소율","hire":"2002-03-14","child":"전누리","level":"대학교","uniType":"3","note":"City University of Hong Kong (3학년)","grade":3,"vendorCode":"075116","bank":"국민은행","account":"372651-67-612220","acctSeq":"01"},{"id":"seed_u16","name":"정태오","hire":"2002-07-15","child":"권가람","level":"대학교","uniType":"4","note":"경희대학교 국어국문학과 (1학년)","grade":1,"vendorCode":"299752","bank":"KEB하나은행","account":"882001826330","acctSeq":"02"},{"id":"seed_u17","name":"장예린","hire":"2003-05-22","child":"임이안","level":"대학교","uniType":"4","note":"경희대학교 간호학과 (2학년)","grade":2,"vendorCode":"395486","bank":"국민은행","account":"205798682828","acctSeq":"01"},{"id":"seed_u18","name":"안민서","hire":"2005-04-01","child":"권보람","level":"대학교","uniType":"4","note":"성균관대학교 글로벌경영학과 (1학년)","grade":1,"vendorCode":"290222","bank":"KEB하나은행","account":"791-80-58887-1","acctSeq":"01"},{"id":"seed_u19","name":"송서준","hire":"2002-12-02","child":"윤예린","level":"대학교","uniType":"4","note":"경복대학교 간호학과 (1학년)","grade":1,"vendorCode":"401878","bank":"하나은행","account":"017-598983-478","acctSeq":"01"},{"id":"seed_u20","name":"송가람","hire":"2001-11-01","child":"황이안","level":"대학교","uniType":"4","note":"연세대학교 융합인문사회과학과 (1학년)","grade":1,"vendorCode":"384837","bank":"우리은행","account":"26167513613412","acctSeq":"01"},{"id":"seed_u21","name":"홍재윤","hire":"2008-06-09","child":"오도윤","level":"대학교","uniType":"4","note":"상명대학교 사회과 (1학년)","grade":1,"vendorCode":"427316","bank":"우리은행","account":"7232-686-563551","acctSeq":"01"},{"id":"seed_u22","name":"오민서","hire":"2000-05-01","child":"한나연","level":"대학교","uniType":"4","note":"경성대학교 화확공학과 (1학년)","grade":1,"vendorCode":"770658","bank":"우리은행","account":"94811311440242","acctSeq":"01"},{"id":"seed_u23","name":"신한솔","hire":"2004-10-01","child":"장유나","level":"대학교","uniType":"4","note":"한국공학대학교 디자인공학과 (3학년)","grade":3,"vendorCode":"288975","bank":"우리은행","account":"14026140141931","acctSeq":"01"},{"id":"seed_u24","name":"장한솔","hire":"2000-07-10","child":"최수빈","level":"대학교","uniType":"4","note":"순천대학교 공학분야 (1학년)","grade":1,"vendorCode":"058649","bank":"KEB하나은행","account":"208-312402-34483","acctSeq":"02"},{"id":"seed_u25","name":"임수빈","hire":"2010-01-08","child":"안재윤","level":"대학교","uniType":"4","note":"경동대학교 소프트웨어보안과 (1학년)","grade":1,"vendorCode":"245040","bank":"KEB하나은행","account":"008-838737-167","acctSeq":"01"},{"id":"seed_u26","name":"송누리","hire":"2000-02-01","child":"서이안","level":"대학교","uniType":"4","note":"Arizona State University (애리조나 주립대학교) (2학년)","grade":2,"vendorCode":"433532","bank":"신한은행","account":"65020146201","acctSeq":"04"},{"id":"seed_h27","name":"최한솔","hire":"2004-10-01","child":"황수빈","level":"고등학교","uniType":null,"note":"대원외국어고등학교 (1학년, 사립고)","grade":1,"vendorCode":"774121","bank":"국민은행","account":"547280385280","acctSeq":"01"},{"id":"seed_h28","name":"서한솔","hire":"2001-03-22","child":"임소율","level":"고등학교","uniType":null,"note":"보인고등학교 (3학년, 사립고)","grade":3,"vendorCode":"340722","bank":"KEB하나은행","account":"470-45-58530-4","acctSeq":"01"},{"id":"seed_h29","name":"조채원","hire":"2004-09-14","child":"강민서","level":"고등학교","uniType":null,"note":"중앙고등학교 (1학년, 사립고)","grade":1,"vendorCode":"561748","bank":"하나은행","account":"338-014126-906","acctSeq":"01"},{"id":"seed_h30","name":"김지후","hire":"2004-10-01","child":"임현서","level":"고등학교","uniType":null,"note":"중앙고등학교 (1학년, 사립고)","grade":1,"vendorCode":"319829","bank":"KEB하나은행","account":"65724920868288","acctSeq":"01"},{"id":"seed_u27","name":"황소율","hire":"2002-03-14","child":"류누리","level":"대학교","uniType":"4","note":"Hong Kong Baptist University (BA) (4학년)","grade":4,"vendorCode":"075116","bank":"국민은행","account":"372651-67-612220","acctSeq":"01"},{"id":"seed_u28","name":"김누리","hire":null,"child":"류가람","level":"대학교","uniType":null,"note":"⚠ 자녀명·학교 정보 미확인 — 전자결재 원본 확인 필요","grade":null,"vendorCode":"310025","bank":"신한은행","account":"167800837407","acctSeq":"01"},{"id":"seed_os_lms","name":"박세훈","title":"부장","hire":"2004-04-12","child":"안은우","level":"대학교","uniType":"5","grade":1,"note":"홍콩중문대학교 유아교육학과 (1학년) · 5년제(지원 8학기)","vendorCode":"","bank":"우리은행","account":"818-174143-33776","acctSeq":"","overseas":true}],"payments":[{"id":"seed_pu1_1","empId":"seed_u1","year":2026,"term":1,"amount":437.9},{"id":"seed_pu2_1","empId":"seed_u2","year":2026,"term":1,"amount":449.2},{"id":"seed_pu3_1","empId":"seed_u3","year":2026,"term":1,"amount":244.2},{"id":"seed_pu4_1","empId":"seed_u4","year":2026,"term":1,"amount":375},{"id":"seed_pu5_1","empId":"seed_u5","year":2026,"term":1,"amount":454.2},{"id":"seed_pu6_1","empId":"seed_u6","year":2026,"term":1,"amount":459.3},{"id":"seed_pu7_1","empId":"seed_u7","year":2026,"term":1,"amount":481},{"id":"seed_pu8_1","empId":"seed_u8","year":2026,"term":1,"amount":434.2},{"id":"seed_pu9_1","empId":"seed_u9","year":2026,"term":1,"amount":389.5},{"id":"seed_pu11_1","empId":"seed_u11","year":2026,"term":1,"amount":420.8},{"id":"seed_pu12_1","empId":"seed_u12","year":2026,"term":1,"amount":442.4},{"id":"seed_pu13_1","empId":"seed_u13","year":2026,"term":1,"amount":164},{"id":"seed_pu14_1","empId":"seed_u14","year":2026,"term":1,"amount":380.9},{"id":"seed_pu15_1","empId":"seed_u15","year":2026,"term":1,"amount":548.5025},{"id":"seed_pu16_1","empId":"seed_u16","year":2026,"term":1,"amount":359.2},{"id":"seed_pu17_1","empId":"seed_u17","year":2026,"term":1,"amount":397.8},{"id":"seed_pu18_1","empId":"seed_u18","year":2026,"term":1,"amount":602.7},{"id":"seed_pu19_1","empId":"seed_u19","year":2026,"term":1,"amount":385.9},{"id":"seed_pu20_1","empId":"seed_u20","year":2026,"term":1,"amount":759.3},{"id":"seed_pu21_1","empId":"seed_u21","year":2026,"term":1,"amount":381.2},{"id":"seed_pu22_1","empId":"seed_u22","year":2026,"term":1,"amount":431},{"id":"seed_pu23_1","empId":"seed_u23","year":2026,"term":1,"amount":478.8},{"id":"seed_pu24_1","empId":"seed_u24","year":2026,"term":1,"amount":215.7},{"id":"seed_pu25_1","empId":"seed_u25","year":2026,"term":1,"amount":399.2},{"id":"seed_pu26_1","empId":"seed_u26","year":2026,"term":1,"amount":500},{"id":"seed_ph27_1","empId":"seed_h27","year":2026,"quarter":1,"amount":50},{"id":"seed_ph27_2","empId":"seed_h27","year":2026,"quarter":2,"amount":50},{"id":"seed_ph27_3","empId":"seed_h27","year":2026,"quarter":3,"amount":50},{"id":"seed_ph28_1","empId":"seed_h28","year":2026,"quarter":1,"amount":50},{"id":"seed_ph28_2","empId":"seed_h28","year":2026,"quarter":2,"amount":50},{"id":"seed_ph29_1","empId":"seed_h29","year":2026,"quarter":1,"amount":50},{"id":"seed_ph30_1","empId":"seed_h30","year":2026,"quarter":1,"amount":50},{"id":"seed_ph30_2","empId":"seed_h30","year":2026,"quarter":2,"amount":50},{"id":"seed_pu1_2","empId":"seed_u1","year":2026,"term":2,"amount":437.9},{"id":"seed_pu2_2","empId":"seed_u2","year":2026,"term":2,"amount":449.2},{"id":"seed_pu3_2","empId":"seed_u3","year":2026,"term":2,"amount":244.2},{"id":"seed_pu4_2","empId":"seed_u4","year":2026,"term":2,"amount":375},{"id":"seed_pu5_2","empId":"seed_u5","year":2026,"term":2,"amount":454.2},{"id":"seed_pu6_2","empId":"seed_u6","year":2026,"term":2,"amount":459.3},{"id":"seed_pu7_2","empId":"seed_u7","year":2026,"term":2,"amount":481},{"id":"seed_pu8_2","empId":"seed_u8","year":2026,"term":2,"amount":434.2},{"id":"seed_pu9_2","empId":"seed_u9","year":2026,"term":2,"amount":389.5},{"id":"seed_pu11_2","empId":"seed_u11","year":2026,"term":2,"amount":420.8},{"id":"seed_pu12_2","empId":"seed_u12","year":2026,"term":2,"amount":442.4},{"id":"seed_pu13_2","empId":"seed_u13","year":2026,"term":2,"amount":164},{"id":"seed_pu14_2","empId":"seed_u14","year":2026,"term":2,"amount":380.9},{"id":"seed_pu16_2","empId":"seed_u16","year":2026,"term":2,"amount":359.2},{"id":"seed_pu17_2","empId":"seed_u17","year":2026,"term":2,"amount":397.8},{"id":"seed_pu18_2","empId":"seed_u18","year":2026,"term":2,"amount":397.3},{"id":"seed_pu19_2","empId":"seed_u19","year":2026,"term":2,"amount":385.9},{"id":"seed_pu20_2","empId":"seed_u20","year":2026,"term":2,"amount":240.7},{"id":"seed_pu21_2","empId":"seed_u21","year":2026,"term":2,"amount":318.8},{"id":"seed_pu22_2","empId":"seed_u22","year":2026,"term":2,"amount":431},{"id":"seed_pu23_2","empId":"seed_u23","year":2026,"term":2,"amount":478.8},{"id":"seed_pu24_2","empId":"seed_u24","year":2026,"term":2,"amount":215.7},{"id":"seed_pu25_2","empId":"seed_u25","year":2026,"term":2,"amount":300.8},{"id":"seed_pu26_2","empId":"seed_u26","year":2026,"term":2,"amount":500},{"empId":"seed_h27","quarter":4,"amount":50,"id":"seed_ph_extra0","year":2026},{"empId":"seed_h28","quarter":3,"amount":50,"id":"seed_ph_extra1","year":2026},{"empId":"seed_h28","quarter":4,"amount":50,"id":"seed_ph_extra2","year":2026},{"empId":"seed_h29","quarter":2,"amount":50,"id":"seed_ph_extra3","year":2026},{"empId":"seed_h29","quarter":3,"amount":50,"id":"seed_ph_extra4","year":2026},{"empId":"seed_h29","quarter":4,"amount":50,"id":"seed_ph_extra5","year":2026},{"empId":"seed_h30","quarter":3,"amount":50,"id":"seed_ph_extra6","year":2026},{"empId":"seed_h30","quarter":4,"amount":50,"id":"seed_ph_extra7","year":2026},{"id":"add25_1","empId":"seed_u27","year":2025,"term":2,"amount":400},{"id":"add25_2","empId":"seed_u21","year":2025,"term":1,"amount":339},{"id":"add25_3","empId":"seed_u21","year":2025,"term":2,"amount":339},{"id":"add25_4","empId":"seed_u1","year":2025,"term":1,"amount":425.8},{"id":"add25_5","empId":"seed_u1","year":2025,"term":2,"amount":425.8},{"id":"add25_6","empId":"seed_u18","year":2025,"term":1,"amount":369.1},{"id":"add25_7","empId":"seed_u18","year":2025,"term":2,"amount":351.1},{"id":"add25_8","empId":"seed_u6","year":2025,"term":1,"amount":467.2},{"id":"add25_9","empId":"seed_u6","year":2025,"term":2,"amount":447.2},{"id":"add25_10","empId":"seed_u17","year":2025,"term":1,"amount":404.64},{"id":"add25_11","empId":"seed_u17","year":2025,"term":2,"amount":386.4},{"id":"add25_12","empId":"seed_u13","year":2025,"term":1,"amount":164},{"id":"add25_13","empId":"seed_u13","year":2025,"term":2,"amount":164},{"id":"add25_14","empId":"seed_u8","year":2025,"term":1,"amount":455.7},{"id":"add25_15","empId":"seed_u8","year":2025,"term":2,"amount":437.3},{"id":"add25_16","empId":"seed_u5","year":2025,"term":1,"amount":454.2},{"id":"add25_17","empId":"seed_u5","year":2025,"term":2,"amount":454.2},{"id":"add25_18","empId":"seed_u23","year":2025,"term":1,"amount":478.8},{"id":"add25_19","empId":"seed_u23","year":2025,"term":2,"amount":478.8},{"id":"add25_20","empId":"seed_u2","year":2025,"term":1,"amount":816.9},{"id":"add25_21","empId":"seed_u2","year":2025,"term":2,"amount":816.9},{"id":"add25_22","empId":"seed_u14","year":2025,"term":1,"amount":390.8},{"id":"add25_23","empId":"seed_u14","year":2025,"term":2,"amount":371.3},{"id":"add25_24","empId":"seed_u7","year":2025,"term":1,"amount":400},{"id":"add25_25","empId":"seed_u7","year":2025,"term":2,"amount":400},{"id":"add25_26","empId":"seed_u11","year":2025,"term":1,"amount":500},{"id":"add25_27","empId":"seed_u20","year":2025,"term":1,"amount":500},{"id":"add25_28","empId":"seed_u3","year":2025,"term":1,"amount":250.4,"note":"2026년 실적 비율로 추정 배분(원자료는 부자 합산액)"},{"id":"add25_29","empId":"seed_u4","year":2025,"term":1,"amount":384.5,"note":"2026년 실적 비율로 추정 배분(원자료는 부자 합산액)"},{"id":"add25_30","empId":"seed_u3","year":2025,"term":2,"amount":240.5,"note":"2026년 실적 비율로 추정 배분(원자료는 부자 합산액)"},{"id":"add25_31","empId":"seed_u4","year":2025,"term":2,"amount":369.2,"note":"2026년 실적 비율로 추정 배분(원자료는 부자 합산액)"},{"id":"add25_32","empId":"seed_u12","year":2024,"quarter":4,"amount":50},{"id":"add25_33","empId":"seed_u12","year":2025,"quarter":1,"amount":100},{"id":"add25_34","empId":"seed_u12","year":2025,"quarter":3,"amount":50},{"id":"add25_35","empId":"seed_u12","year":2025,"quarter":4,"amount":50},{"id":"add25_36","empId":"seed_h28","year":2025,"quarter":1,"amount":50},{"id":"add25_37","empId":"seed_h28","year":2025,"quarter":2,"amount":50},{"id":"add25_38","empId":"seed_h28","year":2025,"quarter":3,"amount":50},{"id":"add25_39","empId":"seed_h28","year":2025,"quarter":4,"amount":50},{"id":"add_lee_2026_2","empId":"seed_u28","year":2026,"term":2,"amount":397.8},{"id":"gyeoljae_1","empId":"seed_u27","year":2026,"term":2,"amount":500},{"id":"gyeoljae_2","empId":"seed_u15","year":2026,"term":2,"amount":451.4975},{"id":"seed_os_lms_p1","empId":"seed_os_lms","year":2026,"term":1,"amount":500,"overseas":{"currency":"HKD","fx":null,"fxSource":"","fxDate":"","studentName":"PARK, Minseo","studentId":"1100000001","school_en":"The Chinese University of Hong Kong","school_ko":"홍콩중문대학교","program_en":"BEd Early Childhood Education (Full-Time)","program_ko":"유아교육학과 (교육학사, 전일제)","term_en":"2026-27 Term 1","term_ko":"2026-27 학년도 1학기 (9월 개강·가을)","receiptDate":"24 September 2026","statedTotal":117942,"items":[{"desc_en":"NA Student Asso Fee (p.p.)*","desc_ko":"학생회비","amount":40,"cat":"excluded","why":"강의 대가가 아닌 학생회비","check":false},{"desc_en":"College Grad. Class Act. Fee","desc_ko":"학생활동비","amount":380,"cat":"excluded","why":"강의 대가가 아닌 활동비","check":false},{"desc_en":"Caution Money #","desc_ko":"보증금(Caution Money, 졸업 시 환불)","amount":450,"cat":"excluded","why":"환불성 보증금","check":false},{"desc_en":"Tuition Fee-UG-FT-NL","desc_ko":"수업료 (학부·전일제·비현지(유학생) 요율)","amount":107000,"cat":"tuition","why":"강의·학점 이수의 대가 — 규정상 지원대상","check":false},{"desc_en":"Hostel Fee (NA)","desc_ko":"기숙사비","amount":9072,"cat":"excluded","why":"강의 대가가 아닌 주거비","check":false},{"desc_en":"Hostel Deposit (NA)","desc_ko":"기숙사 보증금","amount":1000,"cat":"excluded","why":"환불성 보증금","check":false}],"tuitionFx":107000,"scholFx":0,"excludedFx":10942,"baseFx":107000,"baseWon":null,"tuitionWon":null,"scholWon":null,"steps":[],"finalWon":5000000,"basis":"학기당 상한 (20년 이상)","requestedWon":5000000,"compYear":2026,"compTerm":1}}]},"누리라인":{"employees":[{"id":"hseed_u1","name":"박다온","hire":"2000-01-17","child":"임보람","level":"대학교","uniType":"4","grade":4,"note":"숭실대학교 스포츠학부 (4학년)","vendorCode":"093192","bank":"KEB하나은행","account":"544992070741","acctSeq":"03","title":"상무","empNo":"093192"},{"id":"hseed_u2","name":"조재윤","hire":"2000-11-13","child":"황지후","level":"대학교","uniType":"4","grade":4,"note":"건국대학교  건축학과 (4학년)","vendorCode":"EA8477","bank":"우리은행","account":"718-341704-71-874","acctSeq":"02","title":"부장","empNo":"EA8477"},{"id":"hseed_u3","name":"서예린","hire":"2005-08-01","child":"조지안","level":"대학교","uniType":"4","grade":2,"note":"서울과학기술대학교 전기정보공학과 (2학년)","vendorCode":"EA9128","bank":"농협은행","account":"452-9841-5377-60","acctSeq":"01","title":"부장","empNo":"EA9128"},{"id":"hseed_u4","name":"황재윤","hire":"1996-06-17","child":"권유나","level":"대학교","uniType":"4","grade":4,"note":"성균관대학교 공학계열과 (4학년)","vendorCode":"E42656","bank":"부산은행","account":"5150556130445","acctSeq":"01","title":"부장","empNo":"E42656"},{"id":"hseed_u6","name":"박유나","hire":"1998-09-14","child":"류지안","level":"대학교","uniType":"4","grade":3,"note":"용인대학교 경영학과 (3학년)","vendorCode":"564041","bank":"KEB하나은행","account":"04234685356","acctSeq":"01","title":"부장","empNo":"564041"},{"id":"hseed_u7","name":"김가람","hire":"2001-06-25","child":"홍유나","level":"대학교","uniType":"4","grade":2,"note":"대진대학교 간호학과 (2학년)","vendorCode":"883106","bank":"신한은행","account":"792-47-082276","acctSeq":"01","title":"부장","empNo":"883106"},{"id":"hseed_u8","name":"김가람","hire":"2001-06-25","child":"한지후","level":"대학교","uniType":"4","grade":1,"note":"서강대학교 컴퓨터공학과 (1학년)","vendorCode":"883106","bank":"신한은행","account":"792-47-082276","acctSeq":"01","title":"부장","empNo":"883106"},{"id":"hseed_u9","name":"임시우","hire":"2003-08-21","child":"홍시우","level":"대학교","uniType":"4","grade":1,"note":"서울대학교 산림과학부 (1학년)","vendorCode":"634786","bank":"국민은행","account":"122138-78-375762","acctSeq":"01","title":"부장","empNo":"634786"},{"id":"hseed_u10","name":"송예린","hire":"1995-03-06","child":"강하윤","level":"대학교","uniType":"2","grade":null,"note":"장안대학교 반려동물산업디자인과","vendorCode":"E81535","bank":"신한은행","account":"493066683645","acctSeq":"01","title":"부장","empNo":"E81535"},{"id":"hseed_u11","name":"이다온","hire":"2000-07-01","child":"장태오","level":"대학교","uniType":"4","grade":2,"note":"홍익대학교 패션디자인과 (2학년)","vendorCode":"EA5288","bank":"국민은행","account":"31436676402067","acctSeq":"01","title":"부장","empNo":"EA5288"},{"id":"hseed_u12","name":"류다온","hire":"1996-06-17","child":"김지안","level":"대학교","uniType":"4","grade":1,"note":"경상국립대학교 미술교육과 (1학년)","vendorCode":"E68773","bank":"부산은행","account":"132281718002","acctSeq":"01","title":"부장","empNo":"E68773"},{"id":"hseed_u13","name":"윤태오","hire":"1997-12-17","child":"이현서","level":"대학교","uniType":"3","grade":1,"note":"청강문화산업대학교 게임전공 (1학년)","vendorCode":"EA4248","bank":"우리은행","account":"611-148936-43-900","acctSeq":"01","title":"부장","empNo":"EA4248"},{"id":"hseed_u14","name":"송지후","hire":"2002-05-27","child":"권시우","level":"대학교","uniType":"3","grade":1,"note":"신구대학교 게임콘텐츠과 (1학년)","vendorCode":"EA5378","bank":"우리은행","account":"3830640037614","acctSeq":"01","title":"부장","empNo":"EA5378"},{"id":"hseed_u15","name":"윤재윤","hire":"2001-02-26","child":"신리안","level":"대학교","uniType":"4","grade":3,"note":"한양대학교 경제학부 (3학년)","vendorCode":"537056","bank":"국민은행","account":"563048137343","acctSeq":"01","title":"부장","empNo":"537056"},{"id":"hseed_u16","name":"윤재윤","hire":"2001-02-26","child":"윤수빈","level":"대학교","uniType":"4","grade":4,"note":"한국공학대학교 경영학과 (4학년)","vendorCode":"537056","bank":"국민은행","account":"563048137343","acctSeq":"01","title":"부장","empNo":"537056"},{"id":"hseed_u17","name":"윤시우","hire":"1995-03-06","child":"임하준","level":"대학교","uniType":"4","grade":4,"note":"성균관대학교 시스템경영공학과 (4학년)","vendorCode":"E97923","bank":"국민은행","account":"760926-03-092600","acctSeq":"01","title":"차장","empNo":"E97923"},{"id":"hseed_u18","name":"강유나","hire":"1992-11-11","child":"권은우","level":"대학교","uniType":"4","grade":1,"note":"Stony Brook University (1학년)","vendorCode":"511253","bank":"산업은행","account":"287-0465-5721-014","acctSeq":"02","title":"사장","empNo":"511253"},{"id":"hseed_u19","name":"강유나","hire":"1992-11-11","child":"박채원","level":"대학교","uniType":"4","grade":2,"note":"생활체육대학원 노인체육복지학과 (2학년)","vendorCode":"511253","bank":"산업은행","account":"287-0465-5721-014","acctSeq":"02","title":"사장","empNo":"511253"},{"id":"hseed_u20","name":"신은우","hire":"2002-03-11","child":"최나연","level":"대학교","uniType":"4","grade":2,"note":"타마대학교(일본) 경영정보학과 (2학년)","vendorCode":"EA3654","bank":"국민은행","account":"610735-87-355706","acctSeq":"02","title":"차장","empNo":"EA3654"}],"payments":[{"id":"hseed_p1_1","empId":"hseed_u1","year":2026,"term":1,"amount":437.1},{"id":"hseed_p2_1","empId":"hseed_u2","year":2026,"term":1,"amount":500},{"id":"hseed_p3_1","empId":"hseed_u3","year":2026,"term":1,"amount":277},{"id":"hseed_p4_1","empId":"hseed_u4","year":2026,"term":1,"amount":491.8},{"id":"hseed_p6_1","empId":"hseed_u6","year":2026,"term":1,"amount":368.4},{"id":"hseed_p7_1","empId":"hseed_u7","year":2026,"term":1,"amount":454.4},{"id":"hseed_p8_1","empId":"hseed_u8","year":2026,"term":1,"amount":506.4},{"id":"hseed_p9_1","empId":"hseed_u9","year":2026,"term":1,"amount":297.5},{"id":"hseed_p10_1","empId":"hseed_u10","year":2026,"term":1,"amount":372.7},{"id":"hseed_p11_1","empId":"hseed_u11","year":2026,"term":1,"amount":485.7},{"id":"hseed_p12_1","empId":"hseed_u12","year":2026,"term":1,"amount":220.8},{"id":"hseed_p13_1","empId":"hseed_u13","year":2026,"term":1,"amount":400},{"id":"hseed_p14_1","empId":"hseed_u14","year":2026,"term":1,"amount":395.8},{"id":"hseed_p15_1","empId":"hseed_u15","year":2026,"term":1,"amount":378},{"id":"hseed_p16_1","empId":"hseed_u16","year":2026,"term":1,"amount":395},{"id":"hseed_p17_1","empId":"hseed_u17","year":2026,"term":1,"amount":491.8},{"id":"hseed_p18_1","empId":"hseed_u18","year":2026,"term":1,"amount":500},{"id":"ha_add_1","empId":"hseed_u1","year":2026,"term":2,"amount":437.1},{"id":"ha_add_2","empId":"hseed_u3","year":2026,"term":2,"amount":277.021},{"id":"ha_add_3","empId":"hseed_u4","year":2026,"term":2,"amount":491.8},{"id":"ha_add_4","empId":"hseed_u6","year":2026,"term":2,"amount":368.4},{"id":"ha_add_5","empId":"hseed_u9","year":2026,"term":2,"amount":297.5},{"id":"ha_add_6","empId":"hseed_u10","year":2026,"term":2,"amount":347.2},{"id":"ha_add_7","empId":"hseed_u11","year":2026,"term":2,"amount":485.7},{"id":"ha_add_8","empId":"hseed_u12","year":2026,"term":2,"amount":220.8},{"id":"ha_add_9","empId":"hseed_u14","year":2026,"term":2,"amount":369.8},{"id":"ha_add_10","empId":"hseed_u17","year":2026,"term":2,"amount":491.8},{"id":"ha_add_11","empId":"hseed_u7","year":2026,"term":2,"amount":454.4},{"id":"ha_add_12","empId":"hseed_u8","year":2026,"term":2,"amount":493.6},{"id":"ha_add_13","empId":"hseed_u15","year":2026,"term":2,"amount":378},{"id":"ha_add_14","empId":"hseed_u16","year":2026,"term":2,"amount":395},{"id":"ha_add_15","empId":"hseed_u18","year":2026,"term":2,"amount":500},{"id":"ha_add_16","empId":"hseed_u19","year":2026,"term":1,"amount":209.3},{"id":"ha_add_17","empId":"hseed_u19","year":2026,"term":2,"amount":209.3},{"id":"ha_add_18","empId":"hseed_u20","year":2026,"term":1,"amount":453.1834},{"id":"ha_add_19","empId":"hseed_u20","year":2026,"term":2,"amount":408.7919}]}};
+
+const RULE = {
+  tiers:[
+    {min:1, max:10, annual:500, semiCap:250},
+    {min:10, max:20, annual:700, semiCap:350},
+    {min:20, max:999, annual:1000, semiCap:500}
+  ],
+  semLimit:{2:4,3:6,4:8,5:8}, // 5년제 이상은 규정상 최대 8학기(4년제 기준)까지만 지원
+  effectiveFrom:{year:2026, term:2}
 };
-let cur="가온해운";
-const $=id=>document.getElementById(id);
-function render(){
-  $("tabs").innerHTML=Object.keys(DATA).map(c=>`<button class="${c===cur?"on":""}" onclick="cur='${c}';render()">${c}</button>`).join("");
-  const q=$("q").value.trim(), all=DATA[cur];
-  const list=all.filter(r=>!q||r.slice(0,3).join(" ").includes(q));
-  const sum=all.reduce((s,r)=>s+r[4],0), done=all.filter(r=>r[5]).length;
-  $("cards").innerHTML=
-   `<div class="card"><span>신청 인원</span><b>${all.length}명</b></div>`+
-   `<div class="card"><span>총 지급액</span><b>${sum.toLocaleString()}만</b></div>`+
-   `<div class="card ok"><span>지급 완료</span><b>${done}건</b></div>`+
-   `<div class="card wait"><span>처리 대기</span><b>${all.length-done}건</b></div>`;
-  $("rows").innerHTML=list.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="n">${r[4]}</td><td><span class="tag ${r[5]?"ok":"wait"}">${r[5]?"완료":"대기"}</span></td></tr>`).join("")||`<tr><td colspan="6">검색 결과 없음</td></tr>`;
+
+document.getElementById('rulebar').innerHTML =
+  '<span><b>근속 1~10년미만</b> 연 500만원 · 학기당 250만원</span>' +
+  '<span><b>근속 10~20년미만</b> 연 700만원 · 학기당 350만원</span>' +
+  '<span><b>근속 20년이상</b> 연 1,000만원 · 학기당 500만원</span>' +
+  '<span><b>지원학기</b> 2년제 4학기 · 3년제 6학기 · 4년제 8학기</span>' +
+  '<span><b>고등학교</b> 분기별 50만원 한도 (규정 변경 없음)</span>' +
+  '<span><b>적용</b> 2026년 2학기 신규 지급분부터 개정 규정 자동 검증</span>';
+
+document.getElementById('banner').innerHTML =
+  '<div class="banner">2026년 1학기 지급 건은 각 사에서 업로드하신 엑셀 데이터를 그대로 반영해 종전 방식으로 보관 중입니다. 2학기 신규 등록 건부터 개정 규정(단일 한도·학기당 상한·지원학기 제한)이 자동 적용/검증됩니다. 상단에서 가온해운 / 누리라인을 전환해 각 사 데이터를 확인할 수 있습니다.</div>';
+
+let currentCompany = '가온해운';
+let employees = STORE[currentCompany].employees;
+let payments = STORE[currentCompany].payments;
+let empFilter = 'all';
+let payFilter = '대학교';
+let termFilter = 'all';
+
+function setTermFilter(f){
+  termFilter = f;
+  document.querySelectorAll('#termFilterBar .subtab').forEach(t=>t.classList.toggle('active', t.dataset.tf===f));
+  renderPay();
 }
-$("q").oninput=render;
-render();
+
+function renderCompanySwitch(){
+  const wrap = document.getElementById('companySwitch');
+  wrap.innerHTML = Object.keys(STORE).map(name =>
+    '<div class="coswitch'+(name===currentCompany?' active':'')+'" onclick="switchCompany(\''+name+'\')">'+name+'</div>'
+  ).join('');
+}
+
+function switchCompany(name){
+  if(name===currentCompany) return;
+  saveStore();
+  currentCompany = name;
+  employees = STORE[name].employees;
+  payments = STORE[name].payments;
+  document.getElementById('companyTitle').textContent = name + ' 자녀 학자금 관리';
+  renderCompanySwitch();
+  empFilter = 'all';
+  payFilter = '대학교';
+  termFilter = 'all';
+  document.querySelectorAll('#tab-employees .subtab').forEach(t=>t.classList.toggle('active', t.dataset.sub==='all'));
+  document.querySelectorAll('#tab-payments .subtab[data-psub]').forEach(t=>t.classList.toggle('active', t.dataset.psub==='대학교'));
+  document.getElementById('payTableUni').style.display = 'table';
+  document.getElementById('payTableHs').style.display = 'none';
+  document.getElementById('termFilterBar').style.display = 'flex';
+  document.getElementById('payTitle').textContent = '대학교 학기별 지급 내역';
+  renderEmp();
+  renderPay();
+  populateSummaryYearSelectors();
+  renderSummary();
+}
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+// "24년 6개월 14일" 형식으로 정확한 근속기간을 계산 (증빙엑셀의 근무년수 칸용)
+function tenureExact(hireStr, asOfDate){
+  if(!hireStr) return '-';
+  const start = new Date(hireStr);
+  const end = asOfDate || new Date();
+  let y = end.getFullYear() - start.getFullYear();
+  let m = end.getMonth() - start.getMonth();
+  let d = end.getDate() - start.getDate();
+  if(d < 0){
+    m--;
+    const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+    d += prevMonth.getDate();
+  }
+  if(m < 0){ y--; m += 12; }
+  return y+'년 '+m+'개월 '+d+'일';
+}
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function todayCompact(){ return todayStr().replace(/-/g,''); }
+// 정산일은 항상 그 달 25일로 자동 지정 (예: 2026-09-25 -> 20260925)
+function settlementDate25(){
+  const d = new Date();
+  return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+'25';
+}
+
+// 금액(만원)을 화면에 보여줄 때 쓰는 표시용 반올림(소수1자리). 저장된 원본 값은 절대 바꾸지 않는다 —
+// toLocaleString()이 소수점을 3자리까지 자체적으로 반올림해 548.5025 같은 값을 548.503처럼 보여주는 걸 막기 위함.
+function fmtM(n){ return (Math.round(n*10)/10).toLocaleString(); }
+// 지급액을 정확한 원 단위로 표시 (예: 5,485,025원). 내부 저장은 만원 단위이므로 10000을 곱해 원 단위로 변환.
+function fmtWon(n){ return Math.round(n*10000).toLocaleString()+'원'; }
+
+function tenureYears(hireDate, asOfDate){
+  if(!hireDate) return 0;
+  const d = new Date(hireDate), now = asOfDate || new Date();
+  let y = now.getFullYear() - d.getFullYear();
+  const m = now.getMonth() - d.getMonth();
+  if(m < 0 || (m===0 && now.getDate() < d.getDate())) y--;
+  return Math.max(y,0);
+}
+function tierFor(years){
+  return RULE.tiers.find(t => years >= t.min && years < t.max) || RULE.tiers[RULE.tiers.length-1];
+}
+function tierLabel(t){
+  if(t.max>=999) return '20년 이상';
+  return t.min + '년 이상~' + t.max + '년 미만';
+}
+function isLegacy(year, term){
+  return (year < RULE.effectiveFrom.year) || (year===RULE.effectiveFrom.year && term < RULE.effectiveFrom.term);
+}
+
+let quickCandidates = [];
+
+function toggleLeaveMode(){
+  const isLeave = document.getElementById('p_isLeave').checked;
+  const amtInput = document.getElementById('p_amount');
+  amtInput.disabled = isLeave;
+  if(isLeave) amtInput.value = '';
+}
+
+function openQuickModal(){
+  document.getElementById('q_text').value = '';
+  document.getElementById('q_pdf_status').textContent = '';
+  document.getElementById('q_result').innerHTML = 'PDF를 올리거나 텍스트를 붙여넣으면 여기에 인식 결과가 표시됩니다.';
+  document.getElementById('q_candidates_wrap').style.display = 'none';
+  document.getElementById('q_saveBtn').disabled = true;
+  quickCandidates = [];
+  document.getElementById('quickModalBg').classList.add('show');
+
+  const dz = document.getElementById('q_dropzone');
+  dz.ondragover = (e)=>{ e.preventDefault(); dz.style.background = '#eef1f6'; };
+  dz.ondragleave = ()=>{ dz.style.background = '#fafafa'; };
+  dz.ondrop = (e)=>{
+    e.preventDefault(); dz.style.background = '#fafafa';
+    if(e.dataTransfer.files.length) handlePdfFile(e.dataTransfer.files[0]);
+  };
+}
+function closeQuickModal(){ document.getElementById('quickModalBg').classList.remove('show'); }
+
+async function handlePdfFile(file){
+  if(!file) return;
+  const statusEl = document.getElementById('q_pdf_status');
+  if(file.type !== 'application/pdf'){ statusEl.textContent = '⚠ PDF 파일만 지원돼요.'; return; }
+  statusEl.textContent = '📄 ' + file.name + ' 읽는 중...';
+  try{
+    const buf = await file.arrayBuffer();
+    if(typeof pdfjsLib === 'undefined'){
+      statusEl.textContent = '⚠ PDF 읽기 라이브러리를 불러오지 못했어요 (인터넷 연결을 확인해주세요). 대신 아래 텍스트 붙여넣기를 이용해주세요.';
+      return;
+    }
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+    let fullText = '';
+    for(let p=1; p<=pdf.numPages; p++){
+      const page = await pdf.getPage(p);
+      const content = await page.getTextContent();
+      fullText += content.items.map(it=>it.str).join(' ') + '\n';
+    }
+    if(!fullText.trim()){
+      statusEl.textContent = '⚠ 이 PDF에서 텍스트를 찾지 못했어요 (스캔 이미지일 수 있어요). 아래 텍스트 붙여넣기를 이용해주세요.';
+      return;
+    }
+    statusEl.textContent = '✅ ' + file.name + ' 읽기 완료 — 아래에서 인식된 항목을 확인하세요.';
+    document.getElementById('q_text').value = fullText;
+    scanTextForCandidates();
+  } catch(err){
+    statusEl.textContent = '⚠ PDF를 읽는 중 오류가 발생했어요: ' + err.message;
+  }
+}
+
+// 텍스트 전체에서 등록된 모든 자녀 이름을 찾고, 그 주변에서 금액·학기·연도를 추출
+function scanTextForCandidates(){
+  const text = document.getElementById('q_text').value;
+  const resultBox = document.getElementById('q_result');
+  const wrap = document.getElementById('q_candidates_wrap');
+  const listEl = document.getElementById('q_candidates_list');
+  quickCandidates = [];
+
+  if(!text.trim()){
+    resultBox.innerHTML = 'PDF를 올리거나 텍스트를 붙여넣으면 여기에 인식 결과가 표시됩니다.';
+    wrap.style.display = 'none';
+    document.getElementById('q_saveBtn').disabled = true;
+    return;
+  }
+
+  // 공백/줄바꿈 차이(예: "박 서린" vs "박서린")에 영향받지 않도록, 공백을 없앤 버전으로 이름을 찾는다.
+  // 위치 매핑을 유지해서 원본 text에서 윈도우를 잘라낼 수 있게 한다.
+  const flatChars = []; // flatChars[i] = 원본 text에서의 인덱스
+  let flatText = '';
+  for(let ci=0; ci<text.length; ci++){
+    if(/\s/.test(text[ci])) continue;
+    flatText += text[ci];
+    flatChars.push(ci);
+  }
+
+  const found = [];
+  employees.forEach(e=>{
+    const flatChild = e.child.replace(/\s+/g,'');
+    const flatIdx = flatText.indexOf(flatChild);
+    if(flatIdx === -1) return;
+    const idx = flatChars[flatIdx]; // 원본 text 상의 시작 위치
+
+    // 이름 뒤 문단 경계(빈 줄) 또는 다음 자녀 이름 전까지만 윈도우로 잡아 다른 사람 금액과 섞이지 않게 한다
+    let windowEnd = idx + 350;
+    const blankLineIdx = text.indexOf('\n\n', idx);
+    if(blankLineIdx !== -1 && blankLineIdx < windowEnd) windowEnd = blankLineIdx;
+    employees.forEach(other=>{
+      if(other.id===e.id) return;
+      const otherFlatIdx = flatText.indexOf(other.child.replace(/\s+/g,''), flatIdx+1);
+      if(otherFlatIdx !== -1){
+        const otherIdx = flatChars[otherFlatIdx];
+        if(otherIdx < windowEnd) windowEnd = otherIdx;
+      }
+    });
+    const windowText = text.slice(Math.max(0, idx-100), windowEnd);
+    const yearMs = [...windowText.matchAll(/(20\d{2})\s*년/g)];
+    const periodMs = [...windowText.matchAll(/(\d)\s*(학기|분기)/g)];
+    const amtMs = [...windowText.matchAll(/([\d,]{6,})\s*원/g)];
+    const year = yearMs.length ? parseInt(yearMs[yearMs.length-1][1]) : new Date().getFullYear();
+    const periodFromText = periodMs.length ? parseInt(periodMs[periodMs.length-1][1]) : null;
+    // 텍스트로 읽은 학기/분기보다, 이미 등록된 데이터 기준 "다음에 등록해야 할 학기"를 우선 추천한다.
+    // (학사년도-회사연도 학기 표기가 반대로 매핑되는 경우가 많아 텍스트만으론 부정확할 수 있음)
+    const periodNum = suggestNextPeriod(e, year);
+    const amount = amtMs.length ? parseInt(amtMs[amtMs.length-1][1].replace(/,/g,''))/10000 : null; // 반올림 없이 정확한 값
+    found.push({ empId: e.id, name: e.name, child: e.child, level: e.level, year, periodNum, periodFromText, amount, note: e.note });
+  });
+
+  if(!found.length){
+    const preview = text.replace(/\s+/g,' ').trim().slice(0,200);
+    resultBox.innerHTML = '⚠ 이 텍스트에서 등록된 직원·자녀 이름을 찾지 못했어요. 신규 직원이면 먼저 "+ 신규 등록"으로 자녀를 등록해주세요.' +
+      '<div style="margin-top:8px; padding:8px; background:#fff; border:1px solid var(--line); border-radius:6px; font-size:11px; color:var(--sub);">추출된 텍스트 미리보기(처음 200자):<br>' + preview + (text.length>200?'...':'') + '</div>';
+    wrap.style.display = 'none';
+    document.getElementById('q_saveBtn').disabled = true;
+    return;
+  }
+
+  quickCandidates = found;
+  resultBox.innerHTML = found.length + '명 인식됨. 아래에서 학기/분기·금액을 확인해주세요.';
+  wrap.style.display = 'block';
+  renderCandidatesList();
+  document.getElementById('q_saveBtn').disabled = false;
+}
+
+function renderCandidatesList(){
+  const listEl = document.getElementById('q_candidates_list');
+  listEl.innerHTML = quickCandidates.map((c,i)=>{
+    const emp = employees.find(e=>e.id===c.empId);
+    const cap = c.level==='대학교' ? tierFor(tenureYears(emp.hire, refDateFor(c.year))).semiCap : 50;
+    const over = c.amount && c.amount > cap;
+    const periodLabel = c.level==='대학교' ? '학기' : '분기';
+    let periodNote = '';
+    if(c.periodFromText && c.periodFromText !== c.periodNum){
+      periodNote = '<div style="font-size:11px; color:#a56b00; margin-top:3px;">⚠ 문서엔 "'+c.periodFromText+periodLabel+'"라고 쓰여있지만, 기존 등록 데이터 기준으로 <b>'+c.periodNum+periodLabel+'</b>을 추천했어요 (학사년도·회사연도 학기 표기가 반대인 경우가 많아요).</div>';
+    }
+    let annualLine = '';
+    if(c.level==='대학교'){
+      const info = annualRemainingInfo(emp, c.year, c.periodNum);
+      const match = c.amount!==null && Math.abs(c.amount - info.suggested) < 0.15;
+      annualLine = '<div style="font-size:11px; color:var(--sub); margin-top:3px;">연간한도 기준 권장액: <b style="color:var(--navy);">'+fmtWon(info.suggested)+'</b>' +
+        ' ('+info.otherTerm+'학기 기지급 '+fmtWon(info.otherPaid)+' 반영)' +
+        (c.amount!==null ? (match ? ' <span class="pill ok">인식금액과 일치</span>' : ' <span class="pill over">인식금액과 차이 있음 — 확인 필요</span>') : '') +
+        ' <button class="ghost" style="font-size:10px; padding:2px 6px; margin-left:4px;" onclick="applyCandidateSuggested('+i+')">이 금액 적용</button></div>';
+    }
+    return '<div style="display:flex; align-items:flex-start; gap:8px; padding:8px; border:1px solid var(--line); border-radius:8px; margin-bottom:6px; font-size:12.5px;">' +
+      '<input type="checkbox" id="qc_chk_'+i+'" checked style="flex:0; margin-top:3px;">' +
+      '<div style="flex:1;">' +
+        '<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' +
+        '<div style="min-width:110px;"><b>'+c.name+' - '+c.child+'</b><br><span style="color:var(--sub); font-size:11px;">'+(c.note||'')+'</span></div>' +
+        '<input type="number" id="qc_year_'+i+'" value="'+c.year+'" style="width:70px;" onchange="updateCandidate('+i+')">' +
+        '<select id="qc_period_'+i+'" style="width:80px;" onchange="updateCandidate('+i+')">' +
+          [1,2,3,4].filter(n=> c.level==='대학교' ? n<=2 : true).map(n=>'<option value="'+n+'"'+(n===c.periodNum?' selected':'')+'>'+n+periodLabel+'</option>').join('') +
+        '</select>' +
+        '<input type="text" inputmode="numeric" id="qc_amt_'+i+'" value="'+(c.amount!==null?Math.round(c.amount*10000).toLocaleString():'')+'" placeholder="원 단위" style="width:110px;" onchange="updateCandidate('+i+')">' +
+        (over ? '<span class="pill over">상한초과('+cap+'만)</span>' : (c.amount? '<span class="pill ok">이내</span>':'')) +
+        '</div>' + periodNote + annualLine +
+      '</div></div>';
+  }).join('');
+}
+
+function applyCandidateSuggested(i){
+  const c = quickCandidates[i];
+  const emp = employees.find(e=>e.id===c.empId);
+  const info = annualRemainingInfo(emp, c.year, c.periodNum);
+  c.amount = info.suggested;
+  renderCandidatesList();
+}
+
+function updateCandidate(i){
+  const c = quickCandidates[i];
+  c.year = parseInt(document.getElementById('qc_year_'+i).value);
+  c.periodNum = parseInt(document.getElementById('qc_period_'+i).value);
+  const raw = parseFloat(String(document.getElementById('qc_amt_'+i).value).replace(/[^0-9.]/g,''));
+  c.amount = raw ? raw/10000 : null; // 반올림 없이 정확한 값 그대로 저장
+  renderCandidatesList();
+}
+
+function quickSaveAll(){
+  let count = 0, updated = 0, skipped = 0;
+  const savedIds = []; // {empId, year, periodNum, level, id} - 저장된(신규/갱신) 건들, 파일 자동생성에 사용
+  quickCandidates.forEach((c,i)=>{
+    const chk = document.getElementById('qc_chk_'+i);
+    if(!chk || !chk.checked || !c.amount) return;
+    const isUni = c.level==='대학교';
+    const existing = payments.find(p=>p.empId===c.empId && p.year===c.year &&
+      (isUni ? p.term===c.periodNum : p.quarter===c.periodNum));
+    if(existing){
+      const label = isUni ? c.periodNum+'학기' : c.periodNum+'분기';
+      if(!confirm(c.name+' - '+c.child+' : 이미 '+c.year+'년 '+label+' 지급 내역('+fmtWon(existing.amount)+')이 있어요. 새 금액('+fmtWon(c.amount)+')으로 덮어쓸까요?')){
+        skipped++; return;
+      }
+      existing.amount = c.amount;
+      updated++;
+      savedIds.push({empId: c.empId, year: c.year, periodNum: c.periodNum, level: c.level, id: existing.id});
+    } else {
+      const newId = uid();
+      const extra = isUni ? { year: c.year, term: c.periodNum, amount: c.amount } : { year: c.year, quarter: c.periodNum, amount: c.amount };
+      payments.push(Object.assign({ id: newId, empId: c.empId }, extra));
+      count++;
+      savedIds.push({empId: c.empId, year: c.year, periodNum: c.periodNum, level: c.level, id: newId});
+    }
+  });
+  STORE[currentCompany].payments = payments;
+  closeQuickModal();
+  // 같은 부모(가족) + 같은 연도·학기(분기)끼리는 한 번만 파일을 생성한다 (downloadVoucherPack이 형제자매를 알아서 묶어줌)
+  const doneGroups = new Set();
+  savedIds.forEach(s=>{
+    const emp = employees.find(e=>e.id===s.empId);
+    const groupKey = (emp.vendorCode||emp.name)+'_'+s.year+'_'+s.periodNum+'_'+s.level;
+    if(doneGroups.has(groupKey)) return;
+    doneGroups.add(groupKey);
+    downloadVoucherPack(s.id);
+  });
+  renderPay();
+  if(count || updated) alert('신규 '+count+'건, 갱신 '+updated+'건 처리되었습니다.'+(skipped?(' ('+skipped+'건은 건너뜀)'):''));
+}
+
+const VOUCHER_TEMPLATE_B64 = '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';
+
+function downloadVoucherPack(paymentId){
+  const p0 = payments.find(x=>x.id===paymentId);
+  if(!p0){ alert('해당 지급 건을 찾을 수 없어요.'); return; }
+  const emp0 = employees.find(e=>e.id===p0.empId);
+  if(!emp0){ alert('직원 정보를 찾을 수 없어요.'); return; }
+  if(typeof XLSX === 'undefined'){
+    alert('엑셀 생성 라이브러리를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해주세요.');
+    return;
+  }
+
+  const isUni = emp0.level === '대학교';
+  const periodNum0 = isUni ? p0.term : p0.quarter;
+
+  // 같은 직원(부모)의 자녀가 여러 명이면, 같은 연도·학기(분기) 건을 자동으로 한 데 묶는다.
+  // 매칭 키: 거래처코드가 있으면 그걸로, 없으면 이름으로 같은 사람(부모)을 판단.
+  const sameParent = e => (emp0.vendorCode ? e.vendorCode===emp0.vendorCode : e.name===emp0.name) && e.level===emp0.level;
+  const siblingEmpIds = employees.filter(sameParent).map(e=>e.id);
+  const bundle = payments.filter(x=>{
+    if(!siblingEmpIds.includes(x.empId)) return false;
+    if(x.status==='leave') return false;
+    const xPeriod = isUni ? x.term : x.quarter;
+    return x.year===p0.year && xPeriod===periodNum0;
+  }).map(x=>({ payment: x, emp: employees.find(e=>e.id===x.empId) }))
+    .sort((a,b)=> a.emp.child.localeCompare(b.emp.child,'ko'));
+
+  if(!emp0.vendorCode || !emp0.bank || !emp0.account){
+    if(!confirm('이 직원은 거래처코드/계좌정보가 등록되어 있지 않아요. 전표의 해당 칸은 비워둔 채로 만들까요?')) return;
+  }
+  if(bundle.length > 1 && !confirm(emp0.name+' 님 자녀 '+bundle.length+'명('+bundle.map(b=>b.emp.child).join(', ')+') 건을 한 파일로 묶어서 만들까요? ("취소"를 누르면 이 건 하나만 만들어요.)')){
+    bundle.length = 0;
+    bundle.push({ payment: p0, emp: emp0 });
+  }
+
+  const schoolLabel = isUni ? '대학교' : '고등학교';
+  const periodLabelOf = n => isUni ? n+'학기' : n+'분기';
+  const periodLabel = periodLabelOf(periodNum0);
+
+  // ---------- 1) ERP 전표 업로드 양식 (자녀 수만큼 순번 0001, 0002... 로 여러 줄) ----------
+  const voucherHeaders = ['순번','거래처코드','거래처명','계정과목','계정과목명','비용증빙타입','증빙번호','거래처인보이스번호',
+    '비용코드','비용명','적요','발생일자','통화','환율단위(발생:원화)','환율(발생:로컬)','발생금액','부가세액(발생)',
+    '원화금액','부가세액(원화)','세금그룹','선주비용','선박코드','선박명','항차','포트코드','포트명','B/L No',
+    '참조타입','참조번호','시작시간','종료시간','저장품코드','저장품명','공급일자','수량','단가','실부서코드',
+    '실부서명','실사용자명','정산여부','미결번호','그룹미결번호','지급타입','정산일','지급통화','지급거래처코드',
+    '지급거래처명','거래처계좌순번','거래처은행명','거래처계좌번호','지로번호'];
+
+  // 객체+key매칭 대신, 헤더와 완전히 같은 순서의 배열을 직접 만들어 셀 위치가 어긋나지 않도록 한다.
+  const voucherAoa = [voucherHeaders];
+  bundle.forEach((b, idx)=>{
+    const p = b.payment;
+    const wonAmount = Math.round(p.amount*10000);
+    const desc = p.year+'년 '+periodLabel+' 학자금 보조금('+schoolLabel+')';
+    voucherAoa.push([
+      String(idx+1).padStart(4,'0'), emp0.vendorCode||'', emp0.name,
+      '2091', '미지급비용(일반관리비)', '증빙없음', '', '',
+      '60070', '제수당', desc, todayCompact(),
+      'KRW', 1, 1,
+      wonAmount, 0, wonAmount, 0,
+      '인보이스', 'N', '','','','','','',
+      '없음', '', '','','','','',
+      0, 0, '','','',
+      'N', '', '', '일반지급', settlementDate25(), 'KRW',
+      emp0.vendorCode||'', emp0.name,
+      emp0.acctSeq||'', emp0.bank||'', emp0.account||'', ''
+    ]);
+  });
+  const wsVoucher = XLSX.utils.aoa_to_sheet(voucherAoa);
+  // 원본 전표 양식과 동일한 소수점 자리수(숫자 서식)를 각 컬럼에 그대로 적용한다.
+  // 0-based 컬럼 인덱스: 13=환율단위(#,##0), 14=환율(#,##0.00), 15=발생금액(#,##0.00),
+  // 16=부가세액발생(#,##0.00), 17=원화금액(#,##0), 18=부가세액원화(#,##0), 34=수량(#,##0.000), 35=단가(#,##0.0000)
+  const numFormats = {13:'#,##0', 14:'#,##0.00', 15:'#,##0.00', 16:'#,##0.00', 17:'#,##0', 18:'#,##0', 34:'#,##0.000', 35:'#,##0.0000'};
+  for(let r=1; r<voucherAoa.length; r++){
+    Object.keys(numFormats).forEach(colIdx=>{
+      const addr = XLSX.utils.encode_cell({r, c: parseInt(colIdx)});
+      if(wsVoucher[addr]) wsVoucher[addr].z = numFormats[colIdx];
+    });
+  }
+  const wbVoucher = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wbVoucher, wsVoucher, 'Sheet');
+  // 원본 전표 양식 파일(Sheet2: 비용증빙타입/세금그룹 등 참조 목록)을 그대로 가져와 같이 첨부해서,
+  // 실제 사내 양식과 동일한 구조(시트 구성)를 유지한다.
+  try {
+    const templateWb = XLSX.read(VOUCHER_TEMPLATE_B64, {type: 'base64'});
+    if(templateWb.Sheets['Sheet2']){
+      XLSX.utils.book_append_sheet(wbVoucher, templateWb.Sheets['Sheet2'], 'Sheet2');
+    }
+  } catch(e){ /* 템플릿을 못 읽어도 전표 자체 생성은 계속 진행 */ }
+  const childrenLabel = bundle.map(b=>b.emp.child).join('_');
+  const vFileName = '전표_'+emp0.name+'_'+childrenLabel+'_'+p0.year+'_'+periodLabel+'.xlsx';
+  XLSX.writeFile(wbVoucher, vFileName);
+
+  // ---------- 2) 증빙 엑셀 ----------
+  // 가온해운: 회사 "학자금 정리" 엑셀 양식 그대로 (병합·노란 강조·계 행·SUMIF). 라이브러리를 못 불러오면 기본 표 형식으로 대체.
+  if(currentCompany === '가온해운'){
+    buildJangkeumEvidenceXlsx(bundle, p0, isUni, emp0).then(ok=>{
+      if(!ok){ alert('양식 엑셀 라이브러리(ExcelJS)를 불러오지 못해 기본 표 형식으로 만들어요. 인터넷 연결을 확인해 주세요.'); writeLegacyEvidence(); }
+    }).catch(err=>{ console.error(err); alert('양식 엑셀 생성 중 오류: '+err.message+' — 기본 표 형식으로 만들어요.'); writeLegacyEvidence(); });
+    return;
+  }
+  writeLegacyEvidence();
+  function writeLegacyEvidence(){
+  const isJangkeum = currentCompany === '가온해운';
+  const evidHeaders = isJangkeum
+    ? ['직급','성명','입사년도','현재년도','근무년수','자녀명','학교구분','학교명','학과/고교형태','학년','학기/분기','수업료','교과서대금','등록금','장학금','지원 금액','비고','학자금 지급 사항']
+    : ['직급','사번','성명','입사년도','현재년도','근무년수','자녀명','학교구분','년제','학교명','학과/고교형태','학년','학기/분기','수업료','지원 금액','비고','학자금 지급사항'];
+  const evidAoa = [evidHeaders];
+  bundle.forEach(b=>{
+    const p = b.payment, emp = b.emp;
+    const wonAmount = Math.round(p.amount*10000);
+    // 해외 영수증 건: 수업료 칸은 영수증 수업료의 원화 환산액, 비고에 외화·환율을 남긴다
+    const ov = p.overseas;
+    const tuitionCell = ov && ov.tuitionWon ? ov.tuitionWon : wonAmount;
+    const scholCell = ov && ov.scholWon ? ov.scholWon : '';
+    const remark = ov ? ('해외('+(ov.school_ko||'')+') '+ov.currency+' '+Number(ov.baseFx).toLocaleString()+' × '+ov.fx+'원 = '+(ov.baseWon||0).toLocaleString()+'원, 규정 적용 '+wonAmount.toLocaleString()+'원') : '';
+    if(isJangkeum){
+      evidAoa.push([
+        emp.title||'', emp.name, emp.hire||'', todayStr(), tenureExact(emp.hire),
+        emp.child, isUni?'대학':'고교', emp.note||'', '', emp.grade||'', periodLabel,
+        tuitionCell, '', '', scholCell, wonAmount, remark, emp.note||''
+      ]);
+    } else {
+      evidAoa.push([
+        emp.title||'', emp.empNo||'', emp.name, emp.hire||'', todayStr(), tenureExact(emp.hire),
+        emp.child, isUni?'대학':'고교', isUni?((emp.uniType||'-')+'년제'):'-', emp.note||'', '', emp.grade||'', periodLabel,
+        tuitionCell, wonAmount, remark, emp.note||''
+      ]);
+    }
+  });
+  const wsEvid = XLSX.utils.aoa_to_sheet(evidAoa);
+  const wbEvid = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wbEvid, wsEvid, p0.year+'.'+periodLabel);
+  // 해외 영수증 건은 번역·규정 적용 시트를 증빙 엑셀에 함께 넣는다
+  bundle.filter(b=>b.payment.overseas).forEach((b, i)=>{
+    const sheetName = ('해외영수증_'+b.emp.child).slice(0, 31);
+    XLSX.utils.book_append_sheet(wbEvid, osSheetFromAoa(osTranslationAoa(b.payment.overseas, b.emp.name, b.emp.child)), sheetName);
+  });
+  const eFileName = '증빙_'+emp0.name+'_'+childrenLabel+'_'+p0.year+'_'+periodLabel+'.xlsx';
+  XLSX.writeFile(wbEvid, eFileName);
+  }
+}
+
+// ===================== 증빙 엑셀 — 회사 "학자금 정리" 양식 그대로 (가온해운) =====================
+// 2026년_학자금_정리 파일의 시트 구조를 재현: 1~3행 제목(A1:R3 병합, 노란 배경) / 4행 머리글 /
+// 자녀마다 학기(대학 2행)·분기(고교 4행) 블록, 직원 정보(A~E)는 자녀 전체 행 병합, 이번 지급 학기 행 K·L·P 노란색 /
+// 마지막 '계' 행(A:J 병합) + 지원금액 SUMIF.
+const EV_NUMFMT = '_-* #,##0_-;\\-* #,##0_-;_-* "-"_-;_-@_-';
+const EV_YELLOW = { type:'pattern', pattern:'solid', fgColor:{argb:'FFFFFF00'} };
+const EV_HEADERS = ['직급','성명','입사년도','현재년도','근무년수','자녀명','학교구분','학교명','학과/고교형태','학년','학기/분기','수업료','교과서대금','등록금','장학금','지원 금액','비고','학자금 지급 사항'];
+const EV_WIDTHS = [7.5,9.75,11.62,13,16,6.75,8.5,20.62,34.38,5,9.38,13.38,12.25,11.62,9.25,15.5,32.38,40.62];
+const EV_CUR_KO = { HKD:'홍콩달러', USD:'미국달러', CAD:'캐나다달러', AUD:'호주달러', GBP:'영국파운드', EUR:'유로', JPY:'일본엔', CNY:'중국위안', SGD:'싱가포르달러', NZD:'뉴질랜드달러', CHF:'스위스프랑', TWD:'대만달러', MYR:'말레이시아링깃' };
+
+function evLoadExcelJS(){
+  if(typeof ExcelJS !== 'undefined') return Promise.resolve(true);
+  return new Promise(res=>{
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+    s.onload = ()=>res(typeof ExcelJS !== 'undefined');
+    s.onerror = ()=>res(false);
+    document.head.appendChild(s);
+  });
+}
+
+// "단국대학교 국제스포츠학과 (3학년)" → {school:'단국대학교', major:'국제스포츠학과'}
+function evSplitNote(note){
+  let n = String(note||'').replace(/\s*\(\d학년\)\s*/g,' ').replace(/\s*·.*$/,'').trim();
+  const m = n.match(/^(.*?(대학교|대학원|대학|기술원|고등학교|학교|University|College|Institute|School))\s*(.*)$/i);
+  if(m) return { school:m[1].trim(), major:m[3].replace(/[()]/g,' ').replace(/\d\s*학년\s*,?/g,' ').replace(/^[\s,]+|[\s,]+$/g,'').replace(/\s+/g,' ').trim() };
+  return { school:n, major:'' };
+}
+
+function evTenureResult(hire, asOf){
+  // 엑셀 DATEDIF(C, D+1, ...) 와 같은 결과 (현재일 다음날 기준)
+  const end = new Date(asOf.getFullYear(), asOf.getMonth(), asOf.getDate()+1);
+  const s = tenureExact(hire, end); // "24년 6개월 14일"
+  return s.replace(/\s/g,'');
+}
+
+function evDate(str){ const [y,m,d] = String(str).split('-').map(Number); return new Date(Date.UTC(y, m-1, d)); }
+
+function evBorder(top, bottom){ return { left:{style:'thin'}, right:{style:'thin'}, top:{style:top||'thin'}, bottom:{style:bottom||'thin'} }; }
+
+async function buildJangkeumEvidenceXlsx(bundle, p0, isUni, emp0){
+  const ok = await evLoadExcelJS();
+  if(!ok) return false;
+  const periods = isUni ? [1,2] : [1,2,3,4];
+  const curPeriod = isUni ? p0.term : p0.quarter;
+  const perLabel = n => isUni ? n+'학기' : n+'/4분기';
+  const yy = String(p0.year).slice(2);
+  const sheetName = (yy+'.'+(isUni ? curPeriod+'학기 대학교' : curPeriod+'분기 고등학교')+'('+emp0.name+')').slice(0,31);
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet(sheetName, {
+    views:[{ state:'frozen', xSplit:11, ySplit:4, zoomScale:85 }],
+    pageSetup:{ orientation:'landscape', fitToPage:true, fitToWidth:1, fitToHeight:0, paperSize:9 }
+  });
+  ws.columns = EV_WIDTHS.map(w=>({ width:w }));
+  const base = { name:'돋움', size:10 };
+  const center = { horizontal:'center', vertical:'middle', wrapText:true };
+
+  // 제목 (A1:R3)
+  ws.mergeCells('A1:R3');
+  const t = ws.getCell('A1');
+  t.value = '<'+p0.year+'년 '+(isUni?'':'고등학교 ')+'학자금 보조 지급 내역>';
+  t.font = { name:'돋움', size:13, bold:true }; t.alignment = center; t.fill = EV_YELLOW; t.border = evBorder();
+  [1,2,3].forEach(r=>ws.getRow(r).height = 21);
+
+  // 머리글
+  const hr = ws.getRow(4); hr.height = 16.5;
+  EV_HEADERS.forEach((h,i)=>{ const c = hr.getCell(i+1); c.value = h; c.font = { ...base, bold:true }; c.alignment = center; c.border = evBorder(); });
+
+  const today = new Date();
+  const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+  const block = periods.length;
+  const startRow = 5;
+  const kids = bundle.map(b=>b.emp);
+  const totalDataRows = kids.length * block;
+  const lastDataRow = startRow + totalDataRows - 1;
+
+  // 직원 정보 (자녀 전체 행 병합)
+  const pv = (col, val, opt)=>{
+    const c = ws.getCell(col+startRow);
+    c.value = val; c.font = base; c.alignment = center; c.border = evBorder();
+    if(opt) Object.assign(c, opt);
+    if(totalDataRows > 1) ws.mergeCells(col+startRow+':'+col+lastDataRow);
+  };
+  pv('A', emp0.title||'');
+  pv('B', emp0.name);
+  pv('C', emp0.hire ? evDate(emp0.hire) : '', { numFmt:'yyyy-mm-dd' });
+  pv('D', todayUTC, { numFmt:'yyyy-mm-dd' });
+  pv('E', { formula:'DATEDIF(C'+startRow+',D'+startRow+'+1,"Y")&"년"&DATEDIF(C'+startRow+',D'+startRow+'+1,"ym")&"개월"&DATEDIF(C'+startRow+',D'+startRow+'+1,"md")&"일"',
+            result: emp0.hire ? evTenureResult(emp0.hire, today) : '' });
+
+  kids.forEach((emp, k)=>{
+    const r0 = startRow + k*block, r1 = r0 + block - 1;
+    const tier = tierFor(tenureYears(emp.hire, refDateFor(p0.year)));
+    const myPays = payments.filter(x=>x.empId===emp.id && x.year===p0.year);
+    const ovAny = myPays.find(x=>x.overseas);
+    const bp = bundle.find(b=>b.emp.id===emp.id);
+    const ov = (bp && bp.payment.overseas) || (ovAny && ovAny.overseas) || null;
+    const split = evSplitNote(emp.note);
+    const uType = String(emp.uniType||'4');
+    const schoolType = isUni ? ((uType==='2'||uType==='3') ? '전문 대학' : '대학') : '고교';
+    const schoolName = ov ? ((ov.school_en ? ov.school_en+' ' : '') + (ov.school_ko ? '('+ov.school_ko+')' : '')).trim() : split.school;
+    const major = ov ? (ov.program_ko || split.major) : split.major;
+
+    const setM = (col, val, opt)=>{
+      const c = ws.getCell(col+r0); c.value = val; c.font = base; c.alignment = center; c.border = evBorder();
+      if(opt) Object.assign(c, opt);
+      if(block>1) ws.mergeCells(col+r0+':'+col+r1);
+    };
+    setM('F', emp.child);
+    setM('G', schoolType);
+    if(ov){
+      // 해외 대학: 학교명을 학과 칸까지 병합 (기존 양식과 동일)
+      const c = ws.getCell('H'+r0); c.value = schoolName + (major ? '\n'+major : ''); c.font = { name:'돋움', size:9 }; c.alignment = center; c.border = evBorder();
+      ws.mergeCells('H'+r0+':I'+r1);
+    } else {
+      setM('H', schoolName);
+      setM('I', major || (isUni ? '' : '사립고'));
+    }
+    setM('J', Number(emp.grade)||'');
+
+    periods.forEach((n, i)=>{
+      const r = r0 + i;
+      const row = ws.getRow(r);
+      row.height = isUni ? 27.75 : 21;
+      const pay = myPays.find(x=> (isUni ? x.term : x.quarter) === n);
+      const isCur = n === curPeriod;
+      const isLeave = pay && pay.status === 'leave';
+      const amtWon = pay && !isLeave ? Math.round(pay.amount*10000) : null;
+      const tuitionWon = pay && !isLeave ? (pay.overseas && pay.overseas.tuitionWon ? pay.overseas.tuitionWon : (pay.tuitionWon || amtWon)) : null;
+      const scholWon = pay && pay.overseas && pay.overseas.scholWon ? pay.overseas.scholWon : null;
+      const cell = (col, val, extra)=>{
+        const c = ws.getCell(col+r);
+        c.value = val; c.font = { ...base, ...(extra&&extra.font||{}) };
+        c.border = evBorder(i===0?'thin':'hair', i===block-1?'thin':'hair');
+        c.alignment = (extra && extra.alignment) || { vertical:'middle', horizontal: (col==='K'?'center':undefined) };
+        if(extra && extra.numFmt) c.numFmt = extra.numFmt;
+        if(isCur && ['K','L','P'].includes(col)) c.fill = EV_YELLOW;
+        return c;
+      };
+      cell('K', perLabel(n));
+      cell('L', isLeave ? '휴학' : tuitionWon, { numFmt:EV_NUMFMT, alignment:{ vertical:'middle', horizontal:'right' } });
+      cell('M', null, { numFmt:EV_NUMFMT });
+      cell('N', null, { numFmt:EV_NUMFMT });
+      cell('O', scholWon, { numFmt:EV_NUMFMT });
+      cell('P', isLeave ? '휴학' : amtWon, { numFmt:EV_NUMFMT, alignment:{ vertical:'middle', horizontal:'right' } });
+
+      // 비고
+      let q = '';
+      if(pay && pay.overseas){
+        const o = pay.overseas;
+        const capped = o.baseWon && o.finalWon && o.finalWon < o.baseWon;
+        q = (o.term_en || o.term_ko || '') +
+            ' / ' + (EV_CUR_KO[o.currency]||'') + ' ' + o.currency + ' ' + Number(o.baseFx).toLocaleString(undefined,{maximumFractionDigits:2}) + ' (수업료)' +
+            (o.fx ? ' × '+o.fx+'원' : '') + (capped ? ' /(상한 '+(o.finalWon/10000).toLocaleString()+'만원 적용)' : '');
+      } else if(isLeave){
+        q = '휴학';
+      } else if(pay && isUni && i===0){
+        q = '연 '+tier.annual.toLocaleString()+'만원';
+      }
+      cell('Q', q, { font:{ name:'맑은 고딕', size:9 }, alignment:{ vertical:'middle', wrapText:true } });
+
+      // 학자금 지급 사항 (지급 기준)
+      let rr = '';
+      if(isUni){
+        if(i===0) rr = '<'+tierLabel(tier).replace('1년 이상~10년 미만','10년미만').replace('10년 이상~20년 미만','10년이상 20년미만').replace('20년 이상','20년이상')+' 근무>';
+        if(i===1) rr = '* '+(emp.uniType||'4')+'년제: 연 '+tier.annual.toLocaleString()+'만원 (학기당 '+tier.semiCap+'만원)' + (ov ? ' / 수업료만 지원' : '');
+      } else {
+        if(i===0) rr = '고등학교 학자금 지급 기준';
+        if(i===1) rr = '<1년이상 근속>';
+        if(i===2) rr = '* 고등학교 분기당 50만원';
+      }
+      cell('R', rr, { font:{ name:'맑은 고딕', size:9 }, alignment:{ vertical:'middle', wrapText:true } });
+    });
+  });
+
+  // 계
+  const tr = lastDataRow + 1;
+  ws.mergeCells('A'+tr+':J'+tr);
+  const sumLabel = ws.getCell('A'+tr); sumLabel.value = '계';
+  sumLabel.font = { ...base, bold:true }; sumLabel.alignment = center; sumLabel.border = evBorder();
+  const kc = ws.getCell('K'+tr); kc.value = perLabel(curPeriod); kc.font = { ...base, bold:true }; kc.alignment = center; kc.fill = EV_YELLOW; kc.border = evBorder();
+  ['L','M','N','O','Q','R'].forEach(col=>{ const c = ws.getCell(col+tr); c.border = evBorder(); c.font = { ...base, bold:true }; c.numFmt = EV_NUMFMT; });
+  ws.getCell('L'+tr).fill = EV_YELLOW;
+  const curSum = bundle.reduce((s,b)=>s + (b.payment.status==='leave' ? 0 : Math.round(b.payment.amount*10000)), 0);
+  const pc = ws.getCell('P'+tr);
+  pc.value = { formula:'SUMIF(K'+startRow+':K'+lastDataRow+',K'+tr+',P'+startRow+':P'+lastDataRow+')', result:curSum };
+  pc.font = { ...base, bold:true }; pc.numFmt = EV_NUMFMT; pc.fill = EV_YELLOW; pc.border = evBorder(); pc.alignment = { vertical:'middle' };
+  ws.getRow(tr).height = 21;
+  ws.pageSetup.printArea = 'A1:R'+tr;
+
+  // 해외 영수증 번역 시트 (같은 파일에 함께)
+  bundle.filter(b=>b.payment.overseas).forEach(b=>{
+    const aoa = osTranslationAoa(b.payment.overseas, b.emp.name, b.emp.child);
+    const w2 = wb.addWorksheet(('해외영수증_'+b.emp.child).slice(0,31), { pageSetup:{ orientation:'portrait', fitToPage:true, fitToWidth:1, fitToHeight:0, paperSize:9 } });
+    w2.columns = [30,34,16,16,20,40].map(w=>({width:w}));
+    aoa.forEach((row, ri)=>{
+      const r = w2.getRow(ri+1);
+      row.forEach((v, ci)=>{
+        const c = r.getCell(ci+1); c.value = (v===''||v===undefined) ? null : v;
+        c.font = { name:'맑은 고딕', size:10 }; c.alignment = { vertical:'middle', wrapText:true };
+        if(typeof v === 'number') c.numFmt = ci===2 ? '#,##0.00' : '#,##0';
+      });
+    });
+    w2.mergeCells('A1:F1');
+    const tt = w2.getCell('A1'); tt.font = { name:'돋움', size:13, bold:true }; tt.alignment = center; tt.fill = EV_YELLOW; w2.getRow(1).height = 24;
+    const hdrIdx = aoa.findIndex(r=>r[0]==='원문 항목') + 1;
+    for(let ri=3; ri<=aoa.length; ri++){
+      const row = aoa[ri-1];
+      if(!row || !row.length) continue;
+      for(let ci=1; ci<=6; ci++){ w2.getCell(ri, ci).border = evBorder(); }
+      if(ri===hdrIdx || row[0]==='규정 적용' || row[0]==='최종 지급액'){
+        for(let ci=1; ci<=6; ci++){ const c = w2.getCell(ri, ci); c.font = { name:'맑은 고딕', size:10, bold:true }; c.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'FFEFEFEF'} }; }
+      }
+      if(row[0]==='최종 지급액') for(let ci=1; ci<=6; ci++) w2.getCell(ri, ci).fill = EV_YELLOW;
+      if(row[4]==='수업료 (지원대상)') for(let ci=1; ci<=6; ci++) w2.getCell(ri, ci).font = { name:'맑은 고딕', size:10, bold:true };
+    }
+  });
+
+  const buf = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '증빙_'+sheetName.replace(/[\\\/:*?"<>|]/g,'')+'.xlsx';
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  return true;
+}
+
+
+function toggleProcessGuide(){
+  const body = document.getElementById('processGuideBody');
+  const icon = document.getElementById('processToggleIcon');
+  const collapsed = body.style.display === 'none';
+  body.style.display = collapsed ? 'block' : 'none';
+  icon.textContent = collapsed ? '접기 ▲' : '펼치기 ▼';
+}
+
+function switchTab(name){
+  document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  document.getElementById('tab-employees').style.display = name==='employees' ? 'block':'none';
+  document.getElementById('tab-payments').style.display = name==='payments' ? 'block':'none';
+  document.getElementById('tab-summary').style.display = name==='summary' ? 'block':'none';
+  if(name==='payments') renderPay();
+  if(name==='summary'){ populateSummaryYearSelectors(); renderSummary(); }
+}
+
+function getAvailableYears(level){
+  const empIds = new Set(employees.filter(e=>e.level===level).map(e=>e.id));
+  const years = new Set(payments.filter(p=>empIds.has(p.empId)).map(p=>p.year));
+  return Array.from(years).sort((a,b)=>b-a);
+}
+
+function populateSummaryYearSelectors(){
+  const uniYears = getAvailableYears('대학교');
+  const hsYears = getAvailableYears('고등학교');
+  const uniSel = document.getElementById('sum_year_uni');
+  const hsSel = document.getElementById('sum_year_hs');
+  const curUni = uniSel.value, curHs = hsSel.value;
+  uniSel.innerHTML = uniYears.map(y=>'<option value="'+y+'">'+y+'년</option>').join('') || '<option value="">-</option>';
+  hsSel.innerHTML = hsYears.map(y=>'<option value="'+y+'">'+y+'년</option>').join('') || '<option value="">-</option>';
+  if(uniYears.includes(Number(curUni))) uniSel.value = curUni; else if(uniYears.length) uniSel.value = uniYears[0];
+  if(hsYears.includes(Number(curHs))) hsSel.value = curHs; else if(hsYears.length) hsSel.value = hsYears[0];
+}
+
+function groupByName(list){
+  const byName = {};
+  list.forEach(e=>{
+    if(!byName[e.name]) byName[e.name] = [];
+    byName[e.name].push(e.id);
+  });
+  return byName;
+}
+
+// 해당 연도 학기의 근속연수를 판단할 기준일(그 해 7/1)
+function refDateFor(year){ return new Date(year, 6, 1); }
+
+// 이미 등록된 데이터를 보고 다음에 등록해야 할 학기를 추천 (대학교: 1/2학기, 고등학교: 1~4분기)
+function suggestNextPeriod(emp, year){
+  if(emp.level==='대학교'){
+    const has1 = payments.some(p=>p.empId===emp.id && p.year===year && p.term===1);
+    const has2 = payments.some(p=>p.empId===emp.id && p.year===year && p.term===2);
+    if(has1 && !has2) return 2;
+    if(!has1 && has2) return 1;
+    return 1; // 아무것도 없거나 둘 다 있으면 기본값 1
+  } else {
+    for(let q=1; q<=4; q++){
+      if(!payments.some(p=>p.empId===emp.id && p.year===year && p.quarter===q)) return q;
+    }
+    return 1;
+  }
+}
+
+// 연간한도 기준 잔여/권장 지급액 계산 (대학교 전용). term: 1 또는 2
+function annualRemainingInfo(emp, year, term){
+  const yrs = tenureYears(emp.hire, refDateFor(year));
+  const tier = tierFor(yrs);
+  const otherTerm = term===1 ? 2 : 1;
+  const otherPaidRaw = payments.filter(p=>p.empId===emp.id && p.year===year && p.term===otherTerm)
+    .reduce((s,p)=>s+p.amount, 0);
+  const otherPaid = Math.round(otherPaidRaw*10)/10; // 표시용(소수1자리)만 반올림
+  const remaining = Math.max(0, tier.annual - otherPaidRaw); // 계산은 반올림 없이 정확하게
+  const suggested = Math.min(remaining, tier.semiCap);
+  return { yrs, tier, otherTerm, otherPaid, remaining, suggested };
+}
+
+function capCell(actual, cap, annualOk, isLeave){
+  if(isLeave){
+    return '<td colspan="2" style="text-align:center;"><span class="pill sem">🏫 휴학</span></td>';
+  }
+  const over = actual > cap;
+  // 학기당 상한은 넘었어도 연간한도 안에서 이월되는 거면(annualOk) 정책상 정상이므로 빨간 경고를 쓰지 않는다.
+  const trueViolation = over && !annualOk;
+  const cls = trueViolation ? ' style="color:#c0392b;font-weight:700;"' : '';
+  let badge = '';
+  if(trueViolation) badge = ' <span class="pill over" style="margin-left:4px;">상한초과</span>';
+  else if(over) badge = ' <span class="pill sem" style="margin-left:4px;">학기소진 초과·연간한도 내</span>';
+  return '<td>'+fmtWon(actual)+'</td><td'+cls+'>'+fmtM(cap)+'만원'+badge+'</td>';
+}
+
+function renderSummary(){
+  const uniYear = Number(document.getElementById('sum_year_uni').value);
+  const uniList = employees.filter(e=>e.level==='대학교')
+    .slice()
+    .sort((a,b)=> a.name.localeCompare(b.name,'ko') || a.child.localeCompare(b.child,'ko'));
+  const uniRows = uniList.map(e=>{
+    const yrs = tenureYears(e.hire, refDateFor(uniYear));
+    const tier = tierFor(yrs);
+    const cap = tier.semiCap;
+    const t1rec = payments.find(p=>p.empId===e.id && p.year===uniYear && p.term===1);
+    const t2rec = payments.find(p=>p.empId===e.id && p.year===uniYear && p.term===2);
+    const t1 = payments.filter(p=>p.empId===e.id && p.year===uniYear && p.term===1).reduce((s,p)=>s+p.amount,0);
+    const t2 = payments.filter(p=>p.empId===e.id && p.year===uniYear && p.term===2).reduce((s,p)=>s+p.amount,0);
+    return {e, cap, annual: tier.annual, t1, t2, t1Leave: t1rec&&t1rec.status==='leave', t2Leave: t2rec&&t2rec.status==='leave'};
+  }).filter(r=>r.t1>0 || r.t2>0 || r.t1Leave || r.t2Leave);
+  document.getElementById('summaryUniTable').innerHTML = uniRows.length ? uniRows.map(r=>{
+    const total = r.t1 + r.t2;
+    const anyLeave = r.t1Leave || r.t2Leave;
+    const bothTerms = r.t1>0 && r.t2>0;
+    let matchBadge;
+    if(anyLeave){
+      matchBadge = '<span class="pill sem">🏫 한 학기 휴학 (비교 제외)</span>';
+    } else if(!bothTerms){
+      matchBadge = '<span class="pill sem">1개 학기만 등록</span>';
+    } else if(total > r.annual){
+      matchBadge = '<span class="pill over">한도초과 (+'+fmtWon(total-r.annual)+')</span>';
+    } else if(Math.abs(total - r.annual) < 0.01){
+      matchBadge = '<span class="pill ok">한도 정확히 일치 ✓</span>';
+    } else {
+      matchBadge = '<span class="pill ok">이내 (여유 '+fmtWon(r.annual-total)+')</span>';
+    }
+    const annualOk = total <= r.annual + 0.01;
+    return '<tr><td>'+r.e.name+'</td><td>'+r.e.child+'</td><td>'+(r.e.uniType||'-')+'년제</td>'+
+    capCell(r.t1, r.cap, annualOk, r.t1Leave) + capCell(r.t2, r.cap, annualOk, r.t2Leave) +
+    '<td><b>'+fmtWon(total)+'</b></td>'+
+    '<td>'+r.annual.toLocaleString()+'만원</td>'+
+    '<td>'+matchBadge+'</td></tr>';
+  }).join('') : '<tr><td colspan="10" style="text-align:center;color:var(--sub);">해당 연도 데이터가 없습니다.</td></tr>';
+
+  const hsYear = Number(document.getElementById('sum_year_hs').value);
+  const HS_CAP = 50;
+  const hsList = employees.filter(e=>e.level==='고등학교')
+    .slice()
+    .sort((a,b)=> a.name.localeCompare(b.name,'ko') || a.child.localeCompare(b.child,'ko'));
+  const hsRows = hsList.map(e=>{
+    const qs = [1,2,3,4].map(q=>payments.filter(p=>p.empId===e.id && p.year===hsYear && p.quarter===q).reduce((s,p)=>s+p.amount,0));
+    return {e, qs};
+  }).filter(r=>r.qs.some(q=>q>0));
+  document.getElementById('summaryHsTable').innerHTML = hsRows.length ? hsRows.map(r=>
+    '<tr><td>'+r.e.name+'</td><td>'+r.e.child+'</td>'+
+    r.qs.map(q=>{
+      const over = q > HS_CAP;
+      return '<td>'+fmtWon(q)+' / '+HS_CAP+'만원'+(over?' <span class="pill over">초과</span>':'')+'</td>';
+    }).join('')+
+    '<td><b>'+fmtWon(r.qs.reduce((a,b)=>a+b,0))+'</b></td></tr>'
+  ).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--sub);">해당 연도 데이터가 없습니다.</td></tr>';
+}
+
+function setEmpFilter(f){
+  empFilter = f;
+  document.querySelectorAll('#tab-employees .subtab').forEach(t=>t.classList.toggle('active', t.dataset.sub===f));
+  renderEmp();
+}
+function setPayFilter(f){
+  payFilter = f;
+  document.querySelectorAll('#tab-payments .subtab').forEach(t=>t.classList.toggle('active', t.dataset.psub===f));
+  document.getElementById('payTitle').textContent = f==='대학교' ? '대학교 학기별 지급 내역' : '고등학교 분기별 지급 내역';
+  document.getElementById('payTableUni').style.display = f==='대학교' ? 'table':'none';
+  document.getElementById('payTableHs').style.display = f==='고등학교' ? 'table':'none';
+  document.getElementById('termFilterBar').style.display = f==='대학교' ? 'flex':'none';
+  renderPay();
+}
+
+function toggleUniFields(){
+  const lvl = document.getElementById('f_schoolLevel').value;
+  document.getElementById('f_uniTypeWrap').style.display = lvl==='대학교' ? 'block' : 'none';
+}
+
+function openEmpModal(){
+  document.getElementById('f_empName').value='';
+  document.getElementById('f_hireDate').value='';
+  document.getElementById('f_childName').value='';
+  document.getElementById('f_schoolLevel').value= payFilter==='고등학교' ? '고등학교':'대학교';
+  document.getElementById('f_uniType').value='4';
+  document.getElementById('f_note').value='';
+  toggleUniFields();
+  document.getElementById('empModalBg').classList.add('show');
+}
+function closeEmpModal(){ document.getElementById('empModalBg').classList.remove('show'); }
+
+function saveEmp(){
+  const name = document.getElementById('f_empName').value.trim();
+  const hire = document.getElementById('f_hireDate').value;
+  const child = document.getElementById('f_childName').value.trim();
+  if(!name || !hire || !child){ alert('직원명, 입사일, 자녀명은 필수입니다.'); return; }
+  employees.push({
+    id: uid(), name, hire, child,
+    level: document.getElementById('f_schoolLevel').value,
+    uniType: document.getElementById('f_uniType').value,
+    grade: document.getElementById('f_grade').value,
+    note: document.getElementById('f_note').value.trim()
+  });
+  closeEmpModal();
+  renderEmp();
+}
+function deleteEmp(id){
+  if(!confirm('삭제하시겠습니까? 관련 지급 내역도 함께 삭제됩니다.')) return;
+  markDeleted([id].concat(payments.filter(p=>p.empId===id).map(p=>p.id)));
+  employees = employees.filter(e=>e.id!==id);
+  payments = payments.filter(p=>p.empId!==id);
+  STORE[currentCompany].employees = employees;
+  STORE[currentCompany].payments = payments;
+  renderEmp(); renderPay();
+}
+
+function latestActualForEmp(empId, isUni){
+  const mine = payments.filter(p=>p.empId===empId);
+  if(!mine.length) return null;
+  const latestYear = Math.max(...mine.map(p=>p.year));
+  const ofYear = mine.filter(p=>p.year===latestYear);
+  if(isUni){
+    const t1rec = ofYear.find(p=>p.term===1), t2rec = ofYear.find(p=>p.term===2);
+    const t1 = ofYear.filter(p=>p.term===1).reduce((s,p)=>s+p.amount,0);
+    const t2 = ofYear.filter(p=>p.term===2).reduce((s,p)=>s+p.amount,0);
+    return {year: latestYear, first: t1, second: t2, firstLeave: t1rec&&t1rec.status==='leave', secondLeave: t2rec&&t2rec.status==='leave'};
+  }
+  const q = n => ofYear.filter(p=>p.quarter===n).reduce((s,p)=>s+p.amount,0);
+  // 고등학교: 가장 최근에 실제로 찍힌 분기 2개(최신순)를 1번째/2번째로 보여준다
+  const quarters = [1,2,3,4].map(n=>({n, amt:q(n)})).filter(x=>x.amt>0);
+  const last = quarters[quarters.length-1], prev = quarters[quarters.length-2];
+  return {
+    year: latestYear,
+    first: prev ? prev.amt : 0, firstLabel: prev ? prev.n+'분기' : '',
+    second: last ? last.amt : 0, secondLabel: last ? last.n+'분기' : ''
+  };
+}
+
+function renderEmp(){
+  const tbody = document.getElementById('empTable');
+  tbody.innerHTML='';
+  const list = employees.filter(e => empFilter==='all' ? true : e.level===empFilter);
+  document.getElementById('empEmpty').style.display = list.length? 'none':'block';
+  list.forEach(e=>{
+    const yrs = tenureYears(e.hire);
+    const tier = tierFor(yrs);
+    const isUni = e.level==='대학교';
+    const actual = latestActualForEmp(e.id, isUni);
+    let firstCell = '-', secondCell = '-';
+    if(actual){
+      if(isUni){
+        firstCell = actual.firstLeave ? actual.year+'년 1학기<br><span class="pill sem">🏫 휴학</span>' : (actual.first>0 ? actual.year+'년 1학기<br><b>'+fmtWon(actual.first)+'</b>' : '-');
+        secondCell = actual.secondLeave ? actual.year+'년 2학기<br><span class="pill sem">🏫 휴학</span>' : (actual.second>0 ? actual.year+'년 2학기<br><b>'+fmtWon(actual.second)+'</b>' : '-');
+      } else {
+        firstCell = actual.first>0 ? actual.year+'년 '+actual.firstLabel+'<br><b>'+fmtWon(actual.first)+'</b>' : '-';
+        secondCell = actual.second>0 ? actual.year+'년 '+actual.secondLabel+'<br><b>'+fmtWon(actual.second)+'</b>' : '-';
+      }
+    }
+    tbody.innerHTML += '<tr>' +
+      '<td>'+e.name+'</td>' +
+      '<td>'+e.hire+'</td>' +
+      '<td>'+yrs+'년</td>' +
+      '<td><span class="pill sem">'+tierLabel(tier)+'</span></td>' +
+      '<td>'+e.child+'</td>' +
+      '<td>'+e.level+'</td>' +
+      '<td>'+(isUni? (e.uniType||'-')+'년제':'-')+'</td>' +
+      '<td>'+(isUni? tier.annual.toLocaleString()+'만원/연':'분기 50만원')+'</td>' +
+      '<td>'+(isUni? tier.semiCap.toLocaleString()+'만원':'-')+'</td>' +
+      '<td style="font-size:11.5px;">'+firstCell+'</td>' +
+      '<td style="font-size:11.5px;">'+secondCell+'</td>' +
+      '<td style="max-width:220px; white-space:normal; color:var(--sub); font-size:11.5px;">'+(e.note||'')+'</td>' +
+      '<td class="rowactions"><button class="ghost" onclick="deleteEmp(\''+e.id+'\')">삭제</button></td>' +
+      '</tr>';
+  });
+  renderStats();
+}
+
+function renderPayTargetOptions(){
+  const sel = document.getElementById('p_target');
+  const list = employees.filter(e => e.level===payFilter);
+  sel.innerHTML = '<option value="">선택하세요</option>' +
+    list.map(e=>'<option value="'+e.id+'">'+e.name+' - '+e.child+' ('+e.level+(e.level==='대학교'?' '+(e.uniType||'')+'년제':'')+')</option>').join('');
+  document.getElementById('p_termWrap').style.display = payFilter==='대학교' ? 'block':'none';
+  document.getElementById('p_quarterWrap').style.display = payFilter==='고등학교' ? 'block':'none';
+  document.getElementById('payModalTitle').textContent = payFilter==='대학교' ? '대학교 학기별 지급 등록' : '고등학교 분기별 지급 등록';
+}
+
+function openPayModal(){
+  renderPayTargetOptions();
+  document.getElementById('p_year').value = 2026;
+  document.getElementById('p_term').value = '2';
+  document.getElementById('p_amount').value = '';
+  document.getElementById('p_isLeave').checked = false;
+  document.getElementById('p_amount').disabled = false;
+  document.getElementById('p_ruleHint').textContent = employees.filter(e=>e.level===payFilter).length? '':'먼저 해당 학교급 직원/자녀를 등록해주세요.';
+  document.getElementById('payModalBg').classList.add('show');
+}
+function closePayModal(){ document.getElementById('payModalBg').classList.remove('show'); }
+
+function prefillPay(fromTargetChange){
+  const emp = employees.find(e=>e.id===document.getElementById('p_target').value);
+  const hint = document.getElementById('p_ruleHint');
+  if(!emp){ hint.textContent=''; return; }
+  const year0 = parseInt(document.getElementById('p_year').value) || new Date().getFullYear();
+  if(fromTargetChange){
+    const suggested = suggestNextPeriod(emp, year0);
+    if(emp.level==='대학교') document.getElementById('p_term').value = String(suggested);
+    else document.getElementById('p_quarter').value = String(suggested);
+  }
+  if(emp.level==='대학교'){
+    const year = year0;
+    const term = parseInt(document.getElementById('p_term').value) || 1;
+    const info = annualRemainingInfo(emp, year, term);
+    hint.innerHTML = '근속 '+info.yrs+'년 · '+tierLabel(info.tier)+' 구간 · 연간한도 '+info.tier.annual+'만원 · 학기당상한 '+info.tier.semiCap+'만원 · '+(emp.uniType||'')+'년제 지원학기 '+(RULE.semLimit[emp.uniType]||'-')+'회' +
+      '<br><b>'+year+'년 '+info.otherTerm+'학기 기지급액 '+fmtWon(info.otherPaid)+' → '+term+'학기 연간한도 기준 권장 지급액: <span style="color:var(--navy);">'+fmtWon(info.suggested)+'</span></b> (연간한도 잔여 '+fmtWon(info.remaining)+', 학기당상한 '+info.tier.semiCap+'만원 중 작은 값)';
+  } else {
+    hint.textContent = '고등학교: 분기별 50만원 한도 전액지급 (규정 변경 없음)';
+  }
+}
+
+function applySuggestedAmount(){
+  const emp = employees.find(e=>e.id===document.getElementById('p_target').value);
+  if(!emp || emp.level!=='대학교') return;
+  const year = parseInt(document.getElementById('p_year').value) || new Date().getFullYear();
+  const term = parseInt(document.getElementById('p_term').value) || 1;
+  const info = annualRemainingInfo(emp, year, term);
+  document.getElementById('p_amount').value = Math.round(info.suggested*10000);
+}
+
+function savePay(){
+  const empId = document.getElementById('p_target').value;
+  const year = parseInt(document.getElementById('p_year').value);
+  const isLeave = document.getElementById('p_isLeave').checked;
+  const rawWon = parseFloat(String(document.getElementById('p_amount').value).replace(/[^0-9.]/g,''));
+  const amount = rawWon ? rawWon/10000 : 0; // 원 -> 만원, 반올림 없이 정확한 값 그대로 저장
+  if(!empId){ alert('대상을 선택해주세요.'); return; }
+  if(!isLeave && !amount){ alert('신청금액을 입력하거나, 휴학인 경우 "휴학" 체크박스를 선택해주세요.'); return; }
+  const extraStatus = isLeave ? { status: 'leave' } : {};
+  let savedId;
+  if(payFilter==='대학교'){
+    const term = parseInt(document.getElementById('p_term').value);
+    const existing = payments.find(p=>p.empId===empId && p.year===year && p.term===term);
+    if(existing){
+      if(!confirm('이미 '+year+'년 '+term+'학기 지급 내역이 있어요. 새 내용으로 덮어쓸까요?')) return;
+      existing.amount = amount; existing.status = isLeave ? 'leave' : undefined;
+      savedId = existing.id;
+    } else {
+      savedId = uid();
+      payments.push(Object.assign({ id: savedId, empId, year, term, amount }, extraStatus));
+    }
+  } else {
+    const quarter = parseInt(document.getElementById('p_quarter').value);
+    const existing = payments.find(p=>p.empId===empId && p.year===year && p.quarter===quarter);
+    if(existing){
+      if(!confirm('이미 '+year+'년 '+quarter+'분기 지급 내역이 있어요. 새 내용으로 덮어쓸까요?')) return;
+      existing.amount = amount; existing.status = isLeave ? 'leave' : undefined;
+      savedId = existing.id;
+    } else {
+      savedId = uid();
+      payments.push(Object.assign({ id: savedId, empId, year, quarter, amount }, extraStatus));
+    }
+  }
+  closePayModal();
+  renderPay();
+  if(!isLeave) downloadVoucherPack(savedId);
+}
+function deletePay(id){
+  markDeleted([id]);
+  payments = payments.filter(p=>p.id!==id);
+  STORE[currentCompany].payments = payments;
+  renderPay();
+}
+
+function renderPay(){
+  renderPayUni();
+  renderPayHs();
+  renderStats();
+}
+
+function renderPayUni(){
+  const tbody = document.getElementById('payTableUniBody');
+  tbody.innerHTML='';
+  const list = payments.filter(p => p.term!==undefined && employees.find(e=>e.id===p.empId && e.level==='대학교')
+    && (termFilter==='all' || String(p.term)===termFilter));
+  document.getElementById('payEmpty').style.display = (payFilter==='대학교' && !list.length) ? 'block':'none';
+  list.slice().sort((a,b)=> b.year-a.year || b.term-a.term).forEach(p=>{
+    const emp = employees.find(e=>e.id===p.empId);
+    if(!emp) return;
+    const legacy = isLegacy(p.year, p.term);
+    const yrs = tenureYears(emp.hire);
+    const tier = tierFor(yrs);
+
+    let capPill = '<span class="pill sem">종전 데이터</span>';
+    let cumPill = '-';
+    let semPill = '-';
+
+    if(!legacy){
+      const yearSum = payments.filter(x=>x.empId===p.empId && x.year===p.year && x.term!==undefined)
+        .reduce((s,x)=>s+x.amount,0);
+      const annualOver = yearSum > tier.annual;
+      if(p.amount > tier.semiCap){
+        // 학기당 상한은 넘었지만, 연간한도 이내면 정책상 정상(연간한도 내 이월)이므로 경고색을 쓰지 않는다.
+        capPill = annualOver
+          ? '<span class="pill over">상한초과 ('+tier.semiCap+'만원)</span>'
+          : '<span class="pill sem">학기소진 초과·연간한도 내</span>';
+      } else {
+        capPill = '<span class="pill ok">이내</span>';
+      }
+      const exactMatch = Math.abs(yearSum - tier.annual) < 0.01;
+      cumPill = (annualOver ? '<span class="pill over">' : '<span class="pill ok">') + '연누적 '+fmtM(yearSum)+'/'+tier.annual+'만원</span>' +
+        (exactMatch ? ' <span class="pill ok">한도 정확히 일치 ✓</span>' : '');
+      const limit = RULE.semLimit[emp.uniType] || 0;
+      const paidSemCount = payments.filter(x=>x.empId===p.empId && x.term!==undefined && !isLegacy(x.year,x.term)).length;
+      semPill = paidSemCount > limit
+        ? '<span class="pill over">'+paidSemCount+'/'+limit+'회 초과</span>'
+        : '<span class="pill ok">'+paidSemCount+'/'+limit+'회</span>';
+    }
+
+    const gradeTerm = emp.grade ? (emp.grade+'학년 '+p.term+'학기') : '-';
+    const isLeave = p.status === 'leave';
+    tbody.innerHTML += '<tr>' +
+      '<td>'+p.year+'</td>' +
+      '<td>'+p.term+'학기</td>' +
+      '<td>'+emp.name+'</td>' +
+      '<td>'+emp.child+'</td>' +
+      '<td>'+(emp.uniType||'-')+'년제</td>' +
+      '<td>'+gradeTerm+'</td>' +
+      (isLeave
+        ? '<td colspan="4" style="text-align:center;"><span class="pill sem">🏫 휴학 (지급 없음)</span></td>'
+        : '<td>'+fmtWon(p.amount)+'</td><td>'+capPill+'</td><td>'+cumPill+'</td><td>'+semPill+'</td>') +
+      (isLeave ? '<td>-</td>' : '<td><button class="ghost" style="font-size:11px; padding:4px 8px;" onclick="downloadVoucherPack(\''+p.id+'\')">📥 전표+증빙</button></td>') +
+      '<td class="rowactions"><button class="ghost" onclick="deletePay(\''+p.id+'\')">삭제</button></td>' +
+      '</tr>';
+  });
+}
+
+function autoGenerateNextTerm(){
+  const uniEmps = employees.filter(e=>e.level==='대학교');
+  if(!confirm('1학기 등록금 기준으로 2학기 청구예정액을 다시 계산합니다. 이미 있는 2학기 데이터는 새로 계산된 값으로 덮어씁니다. 계속할까요?')) return;
+  let created = 0, updated = 0, noFirstTerm = 0;
+  uniEmps.forEach(emp=>{
+    const firstTermPay = payments.find(p=>p.empId===emp.id && p.term===1);
+    if(!firstTermPay){ noFirstTerm++; return; }
+    const yrs = tenureYears(emp.hire);
+    const tier = tierFor(yrs);
+    const projected = Math.round(Math.min(firstTermPay.amount, tier.semiCap) * 10) / 10;
+    const existing = payments.find(p=>p.empId===emp.id && p.term===2 && p.year===firstTermPay.year);
+    if(existing){
+      existing.amount = projected;
+      updated++;
+    } else {
+      payments.push({ id: uid(), empId: emp.id, year: firstTermPay.year, term: 2, amount: projected });
+      created++;
+    }
+  });
+  renderPay();
+  setPayFilter('대학교');
+  alert('2학기 청구예정액 계산 완료 (신규 '+created+'건, 갱신 '+updated+'건)'+(noFirstTerm? (', 1학기 데이터가 없어 건너뛴 건 '+noFirstTerm+'건'):'')+'. 1학기와 동일 등록금 가정, 학기당 상한 초과분은 자동으로 상한액까지만 반영됩니다.');
+}
+
+function renderPayHs(){
+  const tbody = document.getElementById('payTableHsBody');
+  tbody.innerHTML='';
+  const list = payments.filter(p => p.quarter!==undefined && employees.find(e=>e.id===p.empId && e.level==='고등학교'));
+  if(payFilter==='고등학교') document.getElementById('payEmpty').style.display = list.length? 'none':'block';
+  list.slice().sort((a,b)=> b.year-a.year || b.quarter-a.quarter).forEach(p=>{
+    const emp = employees.find(e=>e.id===p.empId);
+    if(!emp) return;
+    const isLeave = p.status === 'leave';
+    const capPill = p.amount > 50
+      ? '<span class="pill over">50만원 초과</span>'
+      : '<span class="pill ok">이내</span>';
+    tbody.innerHTML += '<tr>' +
+      '<td>'+p.year+'</td>' +
+      '<td>'+p.quarter+'분기</td>' +
+      '<td>'+emp.name+'</td>' +
+      '<td>'+emp.child+'</td>' +
+      '<td style="color:var(--sub); font-size:11.5px;">'+(emp.note||'')+'</td>' +
+      (isLeave
+        ? '<td colspan="2" style="text-align:center;"><span class="pill sem">🏫 휴학 (지급 없음)</span></td>'
+        : '<td>'+fmtWon(p.amount)+'</td><td>'+capPill+'</td>') +
+      (isLeave ? '<td>-</td>' : '<td><button class="ghost" style="font-size:11px; padding:4px 8px;" onclick="downloadVoucherPack(\''+p.id+'\')">📥 전표+증빙</button></td>') +
+      '<td class="rowactions"><button class="ghost" onclick="deletePay(\''+p.id+'\')">삭제</button></td>' +
+      '</tr>';
+  });
+}
+
+function renderStats(){
+  saveStore();
+  const totalEmp = new Set(employees.map(e=>e.name)).size;
+  const totalChild = employees.length;
+  const s2Uni = payments.filter(p=>p.term!==undefined && !isLegacy(p.year,p.term));
+  const totalPaid2 = s2Uni.reduce((s,p)=>s+p.amount,0);
+  // 경고 기준: 학기당 상한 초과가 아니라, 정책상 진짜 위반인 "연간누적 > 연간한도"만 집계 (직원+연도 단위 중복 제거)
+  const annualKeys = new Set();
+  s2Uni.forEach(p=>{
+    const emp = employees.find(e=>e.id===p.empId);
+    if(!emp || emp.level!=='대학교') return;
+    const tier = tierFor(tenureYears(emp.hire, refDateFor(p.year)));
+    const yearSum = payments.filter(x=>x.empId===p.empId && x.year===p.year && x.term!==undefined)
+      .reduce((s,x)=>s+x.amount,0);
+    if(yearSum > tier.annual) annualKeys.add(p.empId+'_'+p.year);
+  });
+  const overCount = annualKeys.size;
+
+  document.getElementById('stats').innerHTML =
+    '<div class="stat"><div class="n">'+totalEmp+'</div><div class="l">등록 직원 수</div></div>' +
+    '<div class="stat"><div class="n">'+totalChild+'</div><div class="l">등록 자녀 수 (대학+고교)</div></div>' +
+    '<div class="stat"><div class="n">'+fmtWon(totalPaid2)+'</div><div class="l">2026년 2학기~ 대학 지급 누계</div></div>' +
+    '<div class="stat"><div class="n">'+overCount+'</div><div class="l">연간한도 초과 경고 건</div></div>';
+}
+
+// ===================== 해외 영수증 판독·번역 (오프라인 규칙 기반) =====================
+// pdf.js로 뽑은 텍스트 조각(좌표 포함)을 줄 단위로 다시 묶고, 항목명을 사전으로 번역·분류한다.
+// 분류: tuition(지원대상 수업료) / scholarship(장학금·감면, 수업료에서 차감) / excluded(지원 제외) / payment(납부·환불 내역, 계산 제외)
+
+// 회사 학자금 규정: "수업료"만 지원. 판단 기준 = 강의·학점 이수의 대가로 내는 돈인가?
+//  - 이름이 아니라 성격으로 판단한다 (예: College Fee는 이름에 '수업'이 없고 운영 부담금이라 제외, Differential Tuition은 강의 대가라 포함)
+//  - 애매하면 지원 제외 + '확인' 표시 (규정이 수업료만 인정하므로 보수적으로)
+const OS_FEE_DICT = [
+  // 순서가 중요: 위에서부터 먼저 걸리는 규칙을 적용
+  {re:/scholarship|bursary|grant(?!.*fee)|waiver|discount|award|financial\s*aid|sponsorship|remission/i, ko:'장학금·감면', cat:'scholarship', why:'장학금·감면은 실제 부담 수업료에서 차감'},
+  {re:/\bpayment\b|\bpaid\b|refund|credit\s*card|bank\s*transfer|remittance|\breceived\b/i, ko:'납부·환불 내역', cat:'payment', why:'청구 항목이 아닌 납부 기록 — 계산 제외'},
+  {re:/late|penalt|fine\b|interest|installment\s*fee|payment\s*plan/i, ko:'연체료·분납 수수료', cat:'excluded', why:'강의 대가가 아닌 연체·수수료'},
+  {re:/tuition\s*(and|&|\+)\s*(other\s*)?fees?|fees?\s*(and|&)\s*tuition|tuition\s*\/\s*fees?/i, ko:'수업료+기타비용 합산액', cat:'excluded', check:true, why:'수업료와 다른 비용이 한 금액으로 합쳐져 있어 수업료만 확인 불가 — 학교에 항목별 명세서 요청 필요'},
+  {re:/(tuition|enrol(l)?ment|seat|confirmation|advance)\s*deposit/i, ko:'수업료 예치금', cat:'excluded', check:true, why:'나중에 수업료로 대체되는 예치금일 수 있음 — 같은 학기 수업료에서 이미 빠졌는지 확인 (이중 지급 방지)'},
+  {re:/differential|program(me)?\s*(tuition|surcharge)|major\s*fee|college\s*tuition/i, ko:'전공별 추가 수업료', cat:'tuition', why:'전공·단과대에 따라 붙는 수업료 가산분 — 강의 대가라 수업료로 판단'},
+  {re:/credit\s*hour|per\s*credit|per\s*unit|unit\s*fee|instruction(al)?\s*fee|academic\s*fee|course\s*credit|tuition/i, ko:'수업료', cat:'tuition', why:'강의·학점 이수의 대가 — 규정상 지원대상', tuitionCore:true},
+  {re:/class\s*act|activit/i, ko:'학생활동비', cat:'excluded', why:'강의 대가가 아닌 활동비'},
+  {re:/student\s*(asso|association|union|government|council|senate|services?)|\bsga\b|\bsu\s*fee/i, ko:'학생회비', cat:'excluded', why:'강의 대가가 아닌 학생회비'},
+  {re:/caution\s*money/i, ko:'보증금(Caution Money, 졸업 시 환불)', cat:'excluded', why:'환불성 보증금'},
+  {re:/hostel|housing|dorm|residence|accommodation|\broom\b|lodging/i, ko:'기숙사비', cat:'excluded', why:'강의 대가가 아닌 주거비', dep:/deposit/i, depKo:'기숙사 보증금', depWhy:'환불성 보증금'},
+  {re:/deposit/i, ko:'보증금', cat:'excluded', why:'환불성 보증금'},
+  {re:/health|medical|insurance|clinic|wellness|counsel/i, ko:'건강보험·의료비', cat:'excluded', why:'강의 대가가 아닌 보험·의료비'},
+  {re:/meal|dining|food|board\b/i, ko:'식비', cat:'excluded', why:'강의 대가가 아닌 식비'},
+  {re:/technolog|computer|\bit\s*fee|network|internet/i, ko:'전산·기술 이용료', cat:'excluded', why:'강의 대가가 아닌 시설 이용료'},
+  {re:/\blab|laborator|studio\s*fee/i, ko:'실험실습비', cat:'excluded', why:'수업료와 별도 청구된 실습 재료·시설비'},
+  {re:/application|admission|matriculat/i, ko:'입학 전형·지원료', cat:'excluded', why:'강의 대가가 아닌 전형료'},
+  {re:/orientation/i, ko:'오리엔테이션비', cat:'excluded', why:'강의 대가가 아닌 행사비'},
+  {re:/recreation|athletic|sport|\bgym\b|fitness/i, ko:'체육시설 이용료', cat:'excluded', why:'강의 대가가 아닌 시설 이용료'},
+  {re:/parking|transport|transit|\bbus\b/i, ko:'주차·교통비', cat:'excluded', why:'강의 대가가 아닌 교통비'},
+  {re:/text\s*book|\bbook/i, ko:'교재비', cat:'excluded', why:'수업료가 아닌 교재비'},
+  {re:/library/i, ko:'도서관 이용료', cat:'excluded', why:'강의 대가가 아닌 이용료'},
+  {re:/graduat/i, ko:'졸업 관련 비용', cat:'excluded', why:'강의 대가가 아닌 졸업비용'},
+  {re:/college\s*fee/i, ko:'칼리지 부담금(College Fee)', cat:'excluded', why:'이름과 달리 수업료가 아닌 학교·칼리지 운영 부담금 — 수업료만 인정하는 규정상 제외'},
+  {re:/registration|enrol(l)?ment\s*fee/i, ko:'등록 수수료(행정)', cat:'excluded', why:'해외의 Registration Fee는 행정 수수료 — 한국의 "등록금"(수업료)과 다름'},
+  {re:/(course|programme|program)\s*fee/i, ko:'과정 수업료(Course/Programme Fee)', cat:'tuition', why:'', ctxProgramme:true},
+  {re:/service|comprehensive|mandatory|general\s*fee|campus|facilit|material|capital|infrastructure/i, ko:'학교 의무 부담금(시설·서비스)', cat:'excluded', check:true, why:'모든 학생에게 걷는 시설·서비스 부담금 — 강의 대가가 아니라 제외'}
+];
+
+// 수업료 약어 보충 설명 (Tuition Fee-UG-FT-NL 같은 코드)
+const OS_TUITION_TAGS = [
+  [/\bUG\b|undergrad/i,'학부'], [/\bPG\b|\bgrad(uate)?\b(?!.*class)/i,'대학원'],
+  [/\bFT\b|full[\s-]*time/i,'전일제'], [/\bPT\b|part[\s-]*time/i,'시간제'],
+  [/\bNL\b|non[\s-]*local|international|non[\s-]*resident|out[\s-]*of[\s-]*state/i,'비현지(유학생) 요율'],
+  [/\bresident\b|in[\s-]*state|\blocal\b/i,'현지 요율']
+];
+
+const OS_SCHOOL_DICT = [
+  [/chinese\s+university\s+of\s+hong\s+kong|\bCUHK\b/i,'홍콩중문대학교','The Chinese University of Hong Kong'],
+  [/hong\s+kong\s+university\s+of\s+science|\bHKUST\b/i,'홍콩과학기술대학교','The Hong Kong University of Science and Technology'],
+  [/city\s+university\s+of\s+hong\s+kong/i,'홍콩시티대학교','City University of Hong Kong'],
+  [/hong\s+kong\s+polytechnic/i,'홍콩이공대학교','The Hong Kong Polytechnic University'],
+  [/university\s+of\s+hong\s+kong|\bHKU\b/i,'홍콩대학교','The University of Hong Kong'],
+  [/arizona\s+state\s+university|\bASU\b/i,'애리조나주립대학교','Arizona State University'],
+  [/stony\s*brook/i,'스토니브룩대학교(뉴욕주립대)','Stony Brook University'],
+  [/national\s+university\s+of\s+singapore|\bNUS\b/i,'싱가포르국립대학교','National University of Singapore'],
+  [/nanyang\s+technological/i,'난양공과대학교','Nanyang Technological University'],
+  [/university\s+of\s+tokyo/i,'도쿄대학교','The University of Tokyo'],
+  [/waseda/i,'와세다대학교','Waseda University'],
+  [/keio/i,'게이오기주쿠대학교','Keio University'],
+  [/peking\s+university/i,'베이징대학교','Peking University'],
+  [/tsinghua/i,'칭화대학교','Tsinghua University'],
+  [/fudan/i,'푸단대학교','Fudan University'],
+  [/university\s+of\s+toronto/i,'토론토대학교','University of Toronto'],
+  [/university\s+of\s+british\s+columbia|\bUBC\b/i,'브리티시컬럼비아대학교','University of British Columbia'],
+  [/university\s+of\s+melbourne/i,'멜버른대학교','The University of Melbourne'],
+  [/university\s+of\s+sydney/i,'시드니대학교','The University of Sydney'],
+  [/new\s+york\s+university|\bNYU\b/i,'뉴욕대학교','New York University'],
+  [/university\s+of\s+california,?\s*los\s+angeles|\bUCLA\b/i,'UCLA(캘리포니아대 로스앤젤레스)','University of California, Los Angeles'],
+  [/purdue/i,'퍼듀대학교','Purdue University'],
+  [/boston\s+university/i,'보스턴대학교','Boston University']
+];
+
+const OS_DEGREE = [
+  [/\bB\.?\s?Ed\b/i,'교육학사'], [/\bB\.?\s?B\.?\s?A\b/i,'경영학사'], [/\bB\.?\s?Eng\b/i,'공학사'],
+  [/\bB\.?\s?Sc\b|\bB\.?\s?S\b(?!\w)/i,'이학사'], [/\bB\.?\s?A\b(?!\w)/i,'학사(문학)'], [/\bB\.?\s?Com\b/i,'상학사'],
+  [/\bLLB\b/i,'법학사'], [/\bM\.?\s?Sc\b|\bM\.?\s?A\b(?!\w)|master/i,'석사'], [/bachelor/i,'학사']
+];
+const OS_MAJOR = [
+  [/early\s+childhood\s+education/i,'유아교육'], [/business\s+administration/i,'경영학'], [/computer\s+science/i,'컴퓨터과학'],
+  [/computer\s+engineering/i,'컴퓨터공학'], [/electrical/i,'전기공학'], [/mechanical/i,'기계공학'], [/civil\s+engineering/i,'토목공학'],
+  [/economics/i,'경제학'], [/psychology/i,'심리학'], [/accounting|accountancy/i,'회계학'], [/finance/i,'금융학'],
+  [/marketing/i,'마케팅'], [/nursing/i,'간호학'], [/biolog/i,'생물학'], [/chemistry/i,'화학'], [/mathematic/i,'수학'],
+  [/physics/i,'물리학'], [/communication/i,'커뮤니케이션학'], [/journalism/i,'저널리즘'], [/design/i,'디자인'],
+  [/music/i,'음악'], [/fine\s+arts?/i,'미술'], [/architecture/i,'건축학'], [/law\b/i,'법학'], [/sociology/i,'사회학'],
+  [/political\s+science|politics/i,'정치학'], [/international\s+relations/i,'국제관계학'], [/hospitality/i,'호텔경영'],
+  [/logistics|supply\s+chain/i,'물류·공급망관리'], [/maritime|shipping/i,'해운학'], [/data\s+science/i,'데이터과학'],
+  [/english/i,'영어(영문학)'], [/chinese/i,'중국어(중문학)'], [/education/i,'교육학'], [/engineering/i,'공학'], [/business/i,'경영학']
+];
+
+const OS_CURRENCIES = ['HKD','USD','CAD','AUD','GBP','EUR','JPY','CNY','SGD','NZD','CHF','TWD'];
+
+// pdf.js textContent.items -> 줄 배열 (같은 y끼리 묶되, x 간격이 크면 칸을 ' | '로 구분)
+function osItemsToLines(items){
+  const pts = items.filter(it=>it.str && it.str.trim()).map(it=>({s:it.str, x:it.transform[4], y:it.transform[5], w:it.width||0}));
+  pts.sort((a,b)=> b.y-a.y || a.x-b.x);
+  const rows = [];
+  pts.forEach(p=>{
+    const r = rows.find(r=>Math.abs(r.y-p.y) < 3);
+    if(r) r.items.push(p); else rows.push({y:p.y, items:[p]});
+  });
+  rows.sort((a,b)=>b.y-a.y);
+  return rows.map(r=>{
+    r.items.sort((a,b)=>a.x-b.x);
+    let out = '', lastEnd = null;
+    r.items.forEach(it=>{
+      if(lastEnd===null) out = it.s;
+      else out += (it.x - lastEnd > 40 ? ' | ' : (it.x - lastEnd > 1.5 ? ' ' : '')) + it.s;
+      lastEnd = it.x + it.w;
+    });
+    return out.replace(/\s+/g,' ').trim();
+  });
+}
+
+function osParseAmount(s){
+  const neg = /^\(.*\)$/.test(s) || /^-/.test(s) || /CR$/i.test(s);
+  const v = parseFloat(s.replace(/[^\d.]/g,''));
+  return isNaN(v) ? null : (neg ? -v : v);
+}
+
+function osTranslateTerm(t){
+  if(!t) return {ko:'', compYear:null, compTerm:null};
+  let m;
+  if((m = t.match(/(20\d{2})\s*[-\/]\s*(\d{2,4})\s*(Term|Semester|Sem)\s*(\d)/i))){
+    const y1 = parseInt(m[1]), n = parseInt(m[4]);
+    const ko = m[1]+'-'+m[2]+' 학년도 '+n+'학기'+(n===1?' (9월 개강·가을)':n===2?' (1월 개강·봄)':'');
+    return n===1 ? {ko, compYear:y1, compTerm:2} : {ko, compYear:y1+1, compTerm:1};
+  }
+  if((m = t.match(/(Fall|Autumn)\s*(20\d{2})|(20\d{2})\s*(Fall|Autumn)/i))){
+    const y = parseInt(m[2]||m[3]); return {ko:y+' 가을학기 (8~9월 개강)', compYear:y, compTerm:2};
+  }
+  if((m = t.match(/(Spring|Winter)\s*(20\d{2})|(20\d{2})\s*(Spring|Winter)/i))){
+    const y = parseInt(m[2]||m[3]); const w = /winter/i.test(m[0]);
+    return {ko:y+(w?' 겨울학기':' 봄학기 (1~2월 개강)'), compYear:y, compTerm:1};
+  }
+  if((m = t.match(/Summer\s*(20\d{2})|(20\d{2})\s*Summer/i))){
+    const y = parseInt(m[1]||m[2]); return {ko:y+' 여름학기 (계절학기 — 규정 확인 필요)', compYear:y, compTerm:1};
+  }
+  return {ko:t, compYear:null, compTerm:null};
+}
+
+function osTranslateProgram(p){
+  if(!p) return '';
+  const deg = (OS_DEGREE.find(d=>d[0].test(p))||[])[1];
+  const major = (OS_MAJOR.find(d=>d[0].test(p))||[])[1];
+  const mode = /full[\s-]*time/i.test(p) ? '전일제' : (/part[\s-]*time/i.test(p) ? '시간제' : '');
+  if(!major && !deg) return '';
+  return (major ? major+(major.endsWith('학')?'과':'학과') : '') + ((deg||mode) ? ' ('+[deg,mode].filter(Boolean).join(', ')+')' : '');
+}
+
+// 메인: 줄 배열 -> 판독 결과
+function osParseReceiptLines(lines){
+  lines = lines.map(l=>l.replace(/\s*\|\s*(?=[:：])/g,' '));
+  const full = lines.join('\n');
+  const res = { source:'offline', studentName:'', studentId:'', school_en:'', school_ko:'', program_en:'', program_ko:'',
+    term_en:'', term_ko:'', compYear:null, compTerm:null, receiptDate:'', currency:'', items:[], statedTotal:null, notes:[] };
+
+  // 통화
+  const curHit = OS_CURRENCIES.map(c=>({c, n:(full.match(new RegExp('\\b'+c+'\\b','g'))||[]).length})).sort((a,b)=>b.n-a.n)[0];
+  if(curHit && curHit.n) res.currency = curHit.c;
+  else if(/HK\$/.test(full)) res.currency = 'HKD';
+  else if(/£/.test(full)) res.currency = 'GBP';
+  else if(/€/.test(full)) res.currency = 'EUR';
+  else if(/\$/.test(full)) res.currency = 'USD';
+
+  // 학교
+  const sch = OS_SCHOOL_DICT.find(d=>d[0].test(full));
+  if(sch){ res.school_ko = sch[1]; res.school_en = sch[2]; }
+  else {
+    const m = full.match(/(The\s+)?(?:[A-Z][\w&.'-]*\s+){0,5}(University|College|Institute)(?:\s+of(?:\s+[A-Z][\w&.'-]*){1,5})?/);
+    if(m){ res.school_en = m[0].trim(); res.notes.push('학교명 번역 사전에 없는 학교예요 — 한글 학교명을 직접 확인해 주세요.'); }
+  }
+
+  // 학생명·학번·전공·영수증일자
+  let m;
+  if((m = full.match(/(?:Student\s*Name|Name)\s*[:：]\s*([A-Za-z ,.'-]{3,40})/i))) res.studentName = m[1].split('|')[0].trim();
+  else {
+    const nl = lines.find(l=>/^[A-Z][A-Za-z'-]+,\s*[A-Z][A-Za-z'-]+/.test(l));
+    if(nl) res.studentName = nl.split('|')[0].replace(/\s*Student.*$/i,'').trim();
+  }
+  if((m = full.match(/Student\s*(?:ID|No|Number)[\s.]*(?:No\.?)?\s*[:：#]?\s*([A-Z0-9-]{5,})/i))) res.studentId = m[1];
+  const progIdx = lines.findIndex(l=>/Program(?:me)?\s*[:：]/i.test(l) || /Degree\s*[:：]/i.test(l) || /Major\s*[:：]/i.test(l));
+  if(progIdx !== -1){
+    let seg = lines[progIdx].split(/Program(?:me)?\s*[:：]|Degree\s*[:：]|Major\s*[:：]/i)[1] || '';
+    seg = seg.split('|')[0].trim();
+    // 다음 줄로 이어지는 괄호 처리 (예: "(Full-" + "Time)")
+    if((seg.match(/\(/g)||[]).length > (seg.match(/\)/g)||[]).length && lines[progIdx+1]){
+      const parts = lines[progIdx+1].split('|').map(s=>s.trim());
+      const cont = parts.find(s=>/^\w*\)/.test(s)) || parts[parts.length-1];
+      seg += cont;
+    }
+    res.program_en = seg.trim();
+    res.program_ko = osTranslateProgram(res.program_en);
+  }
+  if((m = full.match(/Date\s*[:：]\s*(\d{1,2}\s+[A-Za-z]+\s+20\d{2}|20\d{2}[-.\/]\d{1,2}[-.\/]\d{1,2}|\d{1,2}[-.\/]\d{1,2}[-.\/]20\d{2}|[A-Za-z]+\s+\d{1,2},?\s+20\d{2})/i))) res.receiptDate = m[1];
+
+  // 학기
+  const termM = full.match(/20\d{2}\s*[-\/]\s*\d{2,4}\s*(?:Term|Semester|Sem)\s*\d|(?:Fall|Autumn|Spring|Summer|Winter)\s*20\d{2}|20\d{2}\s*(?:Fall|Autumn|Spring|Summer|Winter)/i);
+  if(termM){ res.term_en = termM[0].replace(/\s+/g,' '); const t = osTranslateTerm(res.term_en); res.term_ko = t.ko; res.compYear = t.compYear; res.compTerm = t.compTerm; }
+
+  // 항목
+  const AMT = /\(?-?\$?\s?\d{1,3}(?:,\d{3})*\.\d{2}\)?(?:\s?CR)?|\(?-?\$?\s?\d+\.\d{2}\)?/g;
+  lines.forEach(line=>{
+    const flat = line.replace(/\s*\|\s*/g,' ');
+    const amts = flat.match(AMT);
+    if(!amts) return;
+    if(/total|balance|amount\s*due|sub-?total|outstanding|\btel\b|\bfax\b|\bpage\b\s*\d|exchange\s*rate/i.test(flat)){
+      if(/\btotal\b/i.test(flat) && !/sub-?total/i.test(flat)) res.statedTotal = osParseAmount(amts[amts.length-1]);
+      return;
+    }
+    let desc = flat;
+    amts.forEach(a=>{ desc = desc.replace(a,' '); });
+    desc = desc
+      .replace(/\b\d{1,2}[-\/.]\d{1,2}[-\/.]20\d{2}\b|\b20\d{2}[-\/.]\d{1,2}[-\/.]\d{1,2}\b/g,' ')
+      .replace(/20\d{2}\s*[-\/]\s*\d{2,4}\s*(Term|Semester|Sem)\s*\d/ig,' ')
+      .replace(/(Fall|Autumn|Spring|Summer|Winter)\s*20\d{2}|20\d{2}\s*(Fall|Autumn|Spring|Summer|Winter)/ig,' ')
+      .replace(/\b(HKD|USD|CAD|AUD|GBP|EUR|JPY|CNY|SGD|NZD|CHF|TWD)\b/g,' ')
+      .replace(/(^|\s)\d(?=\s|$)/g,' ')
+      .replace(/\s+/g,' ').trim();
+    if(!/[A-Za-z]{3,}/.test(desc)) return;
+    const rule = OS_FEE_DICT.find(r=>r.re.test(desc));
+    if(!rule && !/fee|charge|cost|tuition/i.test(desc)) return; // 금액은 있지만 비용 항목이 아닌 줄 (주소, 학번 등)
+    let ko = rule ? rule.ko : desc + ' (미분류)';
+    let depWhy = null;
+    if(rule && rule.dep && rule.dep.test(desc)){ ko = rule.depKo; depWhy = rule.depWhy; }
+    if(rule && rule.cat==='tuition'){
+      const tags = OS_TUITION_TAGS.filter(t=>t[0].test(desc)).map(t=>t[1]);
+      if(tags.length) ko += ' ('+[...new Set(tags)].join('·')+')';
+    }
+    const amount = osParseAmount(amts[amts.length-1]);
+    let cat = rule ? rule.cat : 'excluded';
+    let why = depWhy || (rule ? rule.why : '사전에 없는 항목 — 확인 필요');
+    if(cat==='scholarship' && amount>0) { /* 장학금은 양수로 표기돼도 차감 처리 */ }
+    res.items.push({ desc_en: desc, desc_ko: ko, amount: Math.abs(amount), cat, why, check: !rule || !!(rule && rule.check), _core: !!(rule && rule.tuitionCore), _prog: !!(rule && rule.ctxProgramme) });
+  });
+
+  // 맥락 판단: Course/Programme Fee는 영국·호주처럼 그게 유일한 학비면 수업료, 별도 Tuition이 있으면 추가 부담금
+  const hasCoreTuition = res.items.some(i=>i._core);
+  res.items.forEach(i=>{
+    if(i._prog){
+      if(hasCoreTuition){ i.cat='excluded'; i.check=true; i.desc_ko='과정 추가 부담금(Program Fee)'; i.why='영수증에 별도 Tuition 항목이 있어, 이 항목은 수업료 외 추가 부담금으로 판단'; }
+      else { i.cat='tuition'; i.check=true; i.why='영수증에 별도 Tuition 항목이 없고 이 항목이 과정 학비 본체 — 수업료로 판단 (확인 권장)'; }
+    }
+    delete i._core; delete i._prog;
+  });
+  // 미분류 항목은 규정상 수업료만 인정하므로 제외 + 확인
+  res.items.forEach(i=>{ if(/\(미분류\)$/.test(i.desc_ko)){ i.cat='excluded'; i.check=true; i.why='수업료로 볼 근거가 없는 항목 — 규정상 제외 (내용 확인 필요)'; } });
+  if(!res.items.length) res.notes.push('영수증에서 비용 항목을 찾지 못했어요. 표에 직접 행을 추가해 주세요.');
+  const sumCharges = res.items.filter(i=>i.cat!=='payment' && i.cat!=='scholarship').reduce((s,i)=>s+i.amount,0);
+  const sumSchol = res.items.filter(i=>i.cat==='scholarship').reduce((s,i)=>s+i.amount,0);
+  if(res.statedTotal!==null && Math.abs(sumCharges - res.statedTotal) > 0.5 && Math.abs(sumCharges - sumSchol - res.statedTotal) > 0.5){
+    res.notes.push('인식한 항목 합계('+sumCharges.toLocaleString()+')가 영수증 TOTAL('+res.statedTotal.toLocaleString()+')과 달라요 — 빠진 항목이 없는지 확인해 주세요.');
+  }
+  return res;
+}
+
+// 전자결재(학자금지급신청서) 텍스트에서 신청 정보 추출
+function osParseApprovalText(text){
+  // PDF 텍스트·이미지 글자인식(OCR) 결과 모두 처리 — OCR 특유의 띄어쓰기·오탈자(기만자, 종/총, 회자/회차 등)를 감안해 넉넉하게 찾는다
+  const t = String(text||'').replace(/\r/g,'');
+  const flat = t.replace(/[|_ㅣ]/g,' ');
+  const r = {};
+  let m;
+  const TITLES = '부사장|사장|전무|상무|이사|수석|부장|차장|과장|대리|계장|주임|사원';
+  const isoDate = (y,mo,d)=> y+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  // 기안일 (시간이 붙은 날짜)
+  let draft = null;
+  if((m = flat.match(/기\s*[안만인]\s*일\s*[:：]?\s*(20\d{2})-(\d{2})-(\d{2})/))) draft = isoDate(m[1],m[2],m[3]);
+  if(draft) r.draftDate = draft;
+  // 입사일: 1) 라벨이 읽히면 그대로  2) OCR로 라벨이 깨지면 → 문서에 처음 나오는 '단독 날짜' 중 기안일보다 5년 이상 앞선 날짜
+  if((m = flat.match(/입\s*사\s*일[^\d]{0,12}((?:19|20)\d{2})\s*[-.\/]\s*(\d{1,2})\s*[-.\/]\s*(\d{1,2})/))) { r.hire = isoDate(m[1],m[2],m[3]); r.hireSource = 'label'; }
+  else {
+    const refYear = draft ? parseInt(draft) : new Date().getFullYear();
+    const birthIdx = flat.search(/생\s*[년녕]\s*월\s*일/);
+    const all = [...flat.matchAll(/((?:19|20)\d{2})-(\d{2})-(\d{2})(?!\s*\d{1,2}:)/g)];
+    const cand = all.find(x=>{
+      if(parseInt(x[1]) > refYear - 5) return false;
+      if(birthIdx !== -1 && x.index > birthIdx && x.index - birthIdx < 40) return false; // 생년월일 바로 뒤 날짜는 제외
+      return true;
+    });
+    if(cand){ r.hire = isoDate(cand[1],cand[2],cand[3]); r.hireSource = 'guess'; }
+  }
+  if((m = flat.match(/근\s*속\s*연\s*수[^\d]{0,8}(\d{1,2})\s*년/))) r.tenureYears = parseInt(m[1]);
+  if((m = flat.match(new RegExp('(?:기\\s*[안만]\\s*자|작\\s*성)\\s*[:：]?\\s*([가-힣]{2,4})\\s*('+TITLES+')')))) { r.empName = m[1]; r.title = m[2]; }
+  if((m = flat.match(/성\s*명\s*[:：]?\s*([가-힣]{2,4})(?=\s|$)/))) r.childName = m[1];
+  if((m = flat.match(/학\s*교\s*명\s*[:：]?\s*([가-힣A-Za-z ]{2,30}?(대학교|대학|University))/))) r.schoolKo = m[1].trim();
+  { const ys = [...flat.matchAll(/(\d)\s*년\s*제(?!\s*기\s*준)/g)]; if(ys.length) r.uniType = ys[0][1]; } // "총 4년제 기준" 같은 설명 문구는 제외
+  if((m = flat.match(/[총종]\s*(\d+)\s*학\s*기\s*중\s*(\d+)\s*회/))) { r.totalSem = parseInt(m[1]); r.applyNo = parseInt(m[2]); }
+  if((m = flat.match(/(?:지원\s*요청\s*금액|신청\s*금액)\s*[:：]?\s*(?:KRW|￦|₩)?\s*([\d,]{5,})/))) r.requestedWon = parseInt(m[1].replace(/,/g,''));
+  if((m = flat.match(/(?:현지\s*지출\s*비용|지출\s*비용)\s*[:：]?\s*([A-Z]{3})\s*([\d,.]+)/))) { r.reqCurrency = m[1]; r.reqForeign = parseFloat(m[2].replace(/,/g,'')); }
+  if((m = flat.match(/(?:입금\s*계좌|계좌)\s*[:：]?\s*([가-힣A-Za-z]+(?:은행|뱅크|증권)?)\s*([\d-]{8,})\s*([가-힣]{2,4})?/))) { r.bank = m[1]; r.account = m[2]; if(m[3]) r.holder = m[3]; }
+  if((m = flat.match(/(20\d{2})\s*년\s*(\d)\s*학\s*기/))) { r.appYear = parseInt(m[1]); r.appTerm = parseInt(m[2]); }
+  if((m = flat.match(/([가-힣]{2,20}(?:학과|학부))/))) r.majorKo = m[1];
+  // 입사일·근속연수 교차검증
+  if(r.hire && r.tenureYears!==undefined){
+    const ref = draft ? new Date(draft) : new Date();
+    const yrs = tenureYears(r.hire, ref);
+    if(Math.abs(yrs - r.tenureYears) > 1) r.hireWarn = '기안지 근속연수('+r.tenureYears+'년)와 읽은 입사일('+r.hire+', '+yrs+'년)이 맞지 않아요';
+  }
+  if(!r.empName && r.holder) r.empName = r.holder;
+  return r;
+}
+
+
+
+// ===================== 해외 영수증 번역·정리 (화면 로직) =====================
+const OS_CAT_LABEL = { tuition:'수업료 (지원대상)', scholarship:'장학금·감면 (차감)', excluded:'지원 제외', payment:'납부내역 (계산 제외)' };
+let osState = null;
+
+function osEsc(s){ return String(s===undefined||s===null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function osNum(n, d){ if(n===null||n===undefined||isNaN(n)) return '-'; return Number(n).toLocaleString(undefined,{minimumFractionDigits:d||0, maximumFractionDigits:d===undefined?2:d}); }
+
+function openOsModal(){
+  osState = { files:[], receipt:null, approval:{}, empMode:'existing', empId:'', newEmp:{}, fx:null, fxSource:'', fxDate:'', compYear:null, compTerm:2, requestedWon:null };
+  ['os_sec_receipt','os_sec_emp','os_sec_calc'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('os_files').innerHTML = '';
+  document.getElementById('os_status').innerHTML = '';
+  document.getElementById('os_appr_text').value = '';
+  document.getElementById('os_fx').value = '';
+  document.getElementById('os_req').value = '';
+  ['os_btn_xlsx','os_btn_print','os_btn_save'].forEach(id=>document.getElementById(id).disabled = true);
+  document.getElementById('osModalBg').classList.add('show');
+  const dz = document.getElementById('os_dropzone');
+  dz.ondragover = e=>{ e.preventDefault(); dz.classList.add('over'); };
+  dz.ondragleave = ()=> dz.classList.remove('over');
+  dz.ondrop = e=>{ e.preventDefault(); dz.classList.remove('over'); osHandleFiles(e.dataTransfer.files); };
+}
+function closeOsModal(){ document.getElementById('osModalBg').classList.remove('show'); }
+
+function osSetStatus(html){ document.getElementById('os_status').innerHTML = html; }
+
+function osFileToB64(file){
+  return new Promise((res, rej)=>{ const r = new FileReader(); r.onload = ()=>res(String(r.result).split(',')[1]); r.onerror = ()=>rej(new Error('파일 읽기 실패')); r.readAsDataURL(file); });
+}
+
+async function osExtractPdfLines(file){
+  if(typeof pdfjsLib === 'undefined') throw new Error('PDF 읽기 라이브러리를 불러오지 못했어요 (인터넷 연결 확인)');
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const pdf = await pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise;
+  let lines = [];
+  for(let p=1; p<=pdf.numPages; p++){
+    const c = await (await pdf.getPage(p)).getTextContent();
+    lines = lines.concat(osItemsToLines(c.items));
+  }
+  return lines;
+}
+
+async function osHandleFiles(fileList){
+  const files = Array.from(fileList||[]).filter(f=>/pdf|image\//.test(f.type));
+  if(!files.length){ osSetStatus('⚠ PDF 또는 이미지(PNG/JPG) 파일만 올릴 수 있어요.'); return; }
+  for(const f of files){
+    const entry = { name:f.name, type:f.type, kind:'unknown', b64: await osFileToB64(f) };
+    osState.files.push(entry);
+    if(f.type === 'application/pdf'){
+      try{
+        const lines = await osExtractPdfLines(f);
+        const text = lines.join('\n');
+        if(/학자금|기안지|신청서|근속연수/.test(text)){
+          entry.kind = 'approval';
+          osApplyApproval(osParseApprovalText(text));
+        } else if(text.trim()){
+          entry.kind = 'receipt';
+          osState.receipt = osParseReceiptLines(lines);
+          osAfterReceipt();
+        } else {
+          entry.kind = 'scan';
+        }
+      } catch(err){ entry.kind = 'error'; entry.err = err.message; }
+    } else {
+      entry.kind = 'image';
+      osRenderFiles();
+      osSetStatus('🔎 '+osEsc(f.name)+' — 이미지 글자 읽는 중이에요 (처음 한 번은 한글 인식 데이터를 받느라 20~40초 걸려요)…');
+      try{
+        const text = await osOcrImage(f);
+        entry.ocrText = text;
+        if(/학자금|기안|신청서|근속|입사|수혜/.test(text)){
+          entry.kind = 'approval';
+          const ta = document.getElementById('os_appr_text');
+          ta.value = text; ta.closest('details').open = true;
+          osApplyApproval(osParseApprovalText(text));
+        } else if(/tuition|fee|total|receipt|invoice|statement/i.test(text)){
+          entry.kind = 'receipt';
+          osState.receipt = osParseReceiptLines(text.split(/\n/).map(l=>l.replace(/\s{3,}/g,' | ').trim()).filter(Boolean));
+          osAfterReceipt();
+        }
+      } catch(err){ entry.ocrErr = err.message; }
+    }
+  }
+  osRenderFiles();
+  const hasImage = osState.files.some(f=>f.kind==='image' || f.kind==='scan');
+  const msgs = [];
+  if(osState.receipt) msgs.push('✅ 영수증 기본 판독 완료 — 아래 번역 표를 확인하세요.');
+  if(osState.files.some(f=>f.kind==='approval' && !f.ocrText)) msgs.push('✅ 전자결재 PDF에서 신청 정보를 읽었어요.');
+  if(osState.files.some(f=>f.kind==='approval' && f.ocrText)) msgs.push('✅ 기안지 이미지에서 글자를 읽었어요 — 입사일·자녀명은 화면 아래 3번에서 꼭 확인해 주세요 (이미지 인식은 숫자를 잘못 읽을 수 있어요).');
+  if(hasImage) msgs.push('🖼 일부 이미지를 읽지 못했어요'+(osState.files.find(f=>f.ocrErr)?' ('+osEsc(osState.files.find(f=>f.ocrErr).ocrErr)+')':'')+'. <b>Claude로 판독·번역</b>을 누르거나 전자결재 내용을 아래에 텍스트로 붙여넣어 주세요.');
+  osState.files.filter(f=>f.kind==='error').forEach(f=>msgs.push('⚠ '+osEsc(f.name)+': '+osEsc(f.err)));
+  osSetStatus(msgs.join('<br>'));
+}
+
+
+// ---------- 이미지 글자 인식 (Tesseract.js, 한글+영문) ----------
+let osOcrWorker = null;
+function osLoadScript(src){
+  return new Promise((res, rej)=>{ const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = ()=>rej(new Error('글자인식 라이브러리를 불러오지 못했어요')); document.head.appendChild(s); });
+}
+async function osOcrImage(file){
+  if(typeof Tesseract === 'undefined') await osLoadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');
+  if(!osOcrWorker) osOcrWorker = await Tesseract.createWorker(['kor','eng']);
+  // 인식률을 높이려고 흑백으로 바꾸고 2배 확대
+  const url = URL.createObjectURL(file);
+  const img = await new Promise((res, rej)=>{ const i = new Image(); i.onload = ()=>res(i); i.onerror = ()=>rej(new Error('이미지를 열 수 없어요')); i.src = url; });
+  const cv = document.createElement('canvas'); cv.width = img.naturalWidth*2; cv.height = img.naturalHeight*2;
+  const ctx = cv.getContext('2d'); ctx.imageSmoothingQuality = 'high'; ctx.filter = 'grayscale(1)';
+  ctx.drawImage(img, 0, 0, cv.width, cv.height);
+  URL.revokeObjectURL(url);
+  const { data } = await osOcrWorker.recognize(cv);
+  return data.text || '';
+}
+
+function osRenderFiles(){
+  const label = {receipt:'영수증', approval:'전자결재', image:'이미지', scan:'스캔 PDF', error:'오류', unknown:'?'};
+  document.getElementById('os_files').innerHTML = osState.files.map((f,i)=>
+    '<span class="os-chip">'+(f.type.startsWith('image')?'🖼':'📄')+' '+osEsc(f.name)+' <b>'+label[f.kind]+'</b> <a onclick="osRemoveFile('+i+')">✕</a></span>').join('');
+}
+function osRemoveFile(i){ osState.files.splice(i,1); osRenderFiles(); }
+
+// ---------- 전자결재 정보 반영 ----------
+function osApplyApprovalText(text){ osApplyApproval(osParseApprovalText(text||'')); }
+function osApplyApproval(a){
+  if(!a) return;
+  Object.keys(a).forEach(k=>{ if(a[k]!==undefined && a[k]!==null && a[k]!=='') osState.approval[k] = a[k]; });
+  const ap = osState.approval;
+  if(ap.requestedWon){ osState.requestedWon = ap.requestedWon; document.getElementById('os_req').value = ap.requestedWon.toLocaleString(); }
+  // 등록된 직원·자녀와 이름이 맞으면 자동 선택, 없으면 신규 등록 칸을 채운다
+  const match = employees.find(e=>e.level==='대학교' && ap.empName && e.name===ap.empName && (!ap.childName || e.child===ap.childName));
+  // 같은 직원이 다른 자녀로 이미 등록돼 있으면 입사일·계좌는 앱에 저장된 값을 우선 사용 (이미지 인식보다 정확)
+  const sameParent = ap.empName ? employees.find(e=>e.name===ap.empName && e.hire) : null;
+  if(match && (ap.childName || employees.filter(e=>e.name===ap.empName && e.level==='대학교').length===1)){ osState.empMode = 'existing'; osState.empId = match.id; }
+  else if(ap.empName || ap.childName){
+    osState.empMode = 'new';
+    const n = osState.newEmp;
+    const set = (k,v)=>{ if(v!==undefined && v!==null && v!=='') n[k] = v; };
+    set('name', ap.empName); set('title', ap.title); set('child', ap.childName);
+    if(sameParent){ n.hire = sameParent.hire; n.hireNote = '앱에 등록된 '+sameParent.name+' 님 입사일 사용'; set('vendorCode', sameParent.vendorCode); set('acctSeq', sameParent.acctSeq); }
+    else if(ap.hire){ n.hire = ap.hire; n.hireNote = ap.hireSource==='label' ? '기안지 입사일에서 읽음' : '기안지에서 찾은 날짜 — 입사일이 맞는지 확인'; if(ap.hireWarn) n.hireNote = '⚠ '+ap.hireWarn; }
+    if(!n.schoolFromReceipt) set('school', ap.schoolKo);
+    set('major', ap.majorKo); set('bank', ap.bank); set('account', ap.account);
+    if(ap.uniType) set('uniType', String(ap.uniType));
+    if(ap.applyNo) set('grade', String(Math.ceil(ap.applyNo/2)));
+  }
+  if(osState.receipt || osState.files.length) osShowSections();
+}
+
+// ---------- 영수증 판독 후 ----------
+function osAfterReceipt(){
+  const r = osState.receipt;
+  if(r.compYear) osState.compYear = r.compYear;
+  if(r.compTerm) osState.compTerm = r.compTerm;
+  if(r.school_ko){ osState.newEmp.school = r.school_ko; osState.newEmp.schoolFromReceipt = true; } // 영수증 학교명(사전 번역)이 이미지 인식보다 정확
+  if(!osState.newEmp.major && r.program_ko) osState.newEmp.major = r.program_ko.replace(/\s*\(.*\)$/,'');
+  osShowSections();
+}
+
+function osShowSections(){
+  if(!osState.receipt) osState.receipt = { source:'manual', studentName:'', studentId:'', school_en:'', school_ko:'', program_en:'', program_ko:'', term_en:'', term_ko:'', receiptDate:'', currency:'USD', items:[], statedTotal:null, notes:[] };
+  ['os_sec_receipt','os_sec_emp','os_sec_calc'].forEach(id=>document.getElementById(id).style.display='block');
+  ['os_btn_xlsx','os_btn_print','os_btn_save'].forEach(id=>document.getElementById(id).disabled = false);
+  osRenderReceipt();
+  osRenderEmp();
+  document.getElementById('os_comp_year').value = osState.compYear || new Date().getFullYear();
+  if(!osState.compYear) osState.compYear = new Date().getFullYear();
+  document.getElementById('os_comp_term').value = String(osState.compTerm||2);
+  osRecalc();
+}
+
+function osRenderReceipt(){
+  const r = osState.receipt;
+  document.getElementById('os_src_badge').innerHTML = r.source==='ai' ? '<span class="pill ok">Claude 판독</span>' : (r.source==='offline' ? '<span class="pill sem">기본 판독 — 확인 필요</span>' : '<span class="pill sem">직접 입력</span>');
+  const f = (key, label, full) => '<div'+(full?' class="os-span2"':'')+'><label>'+label+'</label><input value="'+osEsc(r[key])+'" onchange="osState.receipt[\''+key+'\']=this.value; osRecalc();"></div>';
+  const curOpts = OS_CURRENCIES.map(c=>'<option'+(c===r.currency?' selected':'')+'>'+c+'</option>').join('');
+  document.getElementById('os_header_fields').innerHTML =
+    f('studentName','학생명 (영문)') + f('studentId','학번') + f('receiptDate','영수증 일자') +
+    '<div><label>통화</label><select onchange="osState.receipt.currency=this.value; osState.fx=null; document.getElementById(\'os_fx\').value=\'\'; osRenderReceipt(); osRecalc();">'+curOpts+'</select></div>' +
+    f('school_en','학교 (원문)', true) + f('school_ko','학교 (한글)', true) +
+    f('program_en','전공 (원문)', true) + f('program_ko','전공 (한글)', true) +
+    f('term_en','학기 (원문)', true) + f('term_ko','학기 (한글)', true);
+  document.querySelectorAll('.os-cur').forEach(el=>el.textContent = r.currency || '-');
+  const catOpts = sel => Object.keys(OS_CAT_LABEL).map(k=>'<option value="'+k+'"'+(k===sel?' selected':'')+'>'+OS_CAT_LABEL[k]+'</option>').join('');
+  document.getElementById('os_items').innerHTML = r.items.length ? r.items.map((it,i)=>
+    '<tr class="os-row-'+it.cat+'">' +
+    '<td><input value="'+osEsc(it.desc_en)+'" onchange="osState.receipt.items['+i+'].desc_en=this.value"></td>' +
+    '<td><input value="'+osEsc(it.desc_ko)+'" onchange="osState.receipt.items['+i+'].desc_ko=this.value"></td>' +
+    '<td><input style="text-align:right;" value="'+osNum(it.amount,2)+'" onchange="osState.receipt.items['+i+'].amount=parseFloat(this.value.replace(/,/g,\'\'))||0; osRenderReceipt(); osRecalc();"></td>' +
+    '<td><select onchange="osState.receipt.items['+i+'].cat=this.value; osState.receipt.items['+i+'].why=\'담당자 수동 변경\'; osState.receipt.items['+i+'].check=false; osRenderReceipt(); osRecalc();">'+catOpts(it.cat)+'</select></td>' +
+    '<td style="font-size:11.5px; color:var(--sub);">'+osEsc(it.why)+(it.check?' <span class="pill over">확인</span>':'')+'</td>' +
+    '<td><button class="ghost" style="height:26px; padding:0 8px; font-size:11px;" onclick="osState.receipt.items.splice('+i+',1); osRenderReceipt(); osRecalc();">삭제</button></td></tr>'
+  ).join('') : '<tr><td colspan="6" class="empty" style="padding:14px;">항목이 없어요. "+ 항목 추가"로 입력하세요.</td></tr>';
+  const charges = r.items.filter(i=>i.cat==='tuition'||i.cat==='excluded').reduce((s,i)=>s+i.amount,0);
+  const scholSum = r.items.filter(i=>i.cat==='scholarship').reduce((s,i)=>s+i.amount,0);
+  const totalLine = r.statedTotal!==null && r.statedTotal!==undefined
+    ? ((Math.abs(charges-r.statedTotal)<0.5 || Math.abs(charges-scholSum-r.statedTotal)<0.5) ? '<span class="pill ok">영수증 TOTAL '+osNum(r.statedTotal,2)+'과 일치</span>' : '<span class="pill over">영수증 TOTAL '+osNum(r.statedTotal,2)+'과 '+osNum(Math.abs(charges-r.statedTotal),2)+' 차이</span>')
+    : '';
+  document.getElementById('os_notes').innerHTML =
+    '<div style="font-size:12px; margin-top:8px;">청구 항목 합계 <b>'+(r.currency||'')+' '+osNum(charges,2)+'</b> '+totalLine+'</div>' +
+    (r.notes||[]).map(n=>'<div style="font-size:11.5px; color:#a56b00; margin-top:4px;">⚠ '+osEsc(n)+'</div>').join('');
+}
+function osAddItem(){ osState.receipt.items.push({desc_en:'', desc_ko:'', amount:0, cat:'tuition', why:'담당자 직접 입력', check:false}); osRenderReceipt(); osRecalc(); }
+
+function osRenderEmp(){
+  document.getElementById('os_company_label').textContent = currentCompany;
+  document.querySelectorAll('input[name="os_empmode"]').forEach(r=>r.checked = (r.value===osState.empMode));
+  document.getElementById('os_emp_existing').style.display = osState.empMode==='existing' ? 'block':'none';
+  document.getElementById('os_emp_new').style.display = osState.empMode==='new' ? 'grid':'none';
+  const list = employees.filter(e=>e.level==='대학교').slice().sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+  document.getElementById('os_emp_select').innerHTML = '<option value="">선택하세요</option>' +
+    list.map(e=>'<option value="'+e.id+'"'+(e.id===osState.empId?' selected':'')+'>'+osEsc(e.name+' - '+e.child+' ('+(e.uniType||'')+'년제, '+(e.note||'')+')')+'</option>').join('');
+  const n = osState.newEmp;
+  const f = (key, label, ph, type) => '<div><label>'+label+'</label><input'+(type?' type="'+type+'"':'')+' value="'+osEsc(n[key])+'" placeholder="'+(ph||'')+'" onchange="osState.newEmp[\''+key+'\']=this.value; osRecalc();"></div>';
+  const ut = n.uniType || '4';
+  document.getElementById('os_emp_new').innerHTML =
+    f('name','직원명 *','홍길동') + f('title','직급','부장') +
+    '<div><label>입사일 *</label><input type="date" id="os_new_hire" value="'+osEsc(n.hire)+'" style="'+(n.hire?'':'border-color:var(--red);')+'" onchange="osState.newEmp.hire=this.value; osState.newEmp.hireNote=\'직접 입력\'; osRenderEmp(); osRecalc();">' +
+      '<div style="font-size:10.5px; margin-top:2px; color:'+(n.hire ? (/⚠|확인/.test(n.hireNote||'')?'#a56b00':'var(--green)') : 'var(--red)')+';">'+osEsc(n.hire ? (n.hireNote||'') : '입사일이 있어야 지급액을 계산해요')+'</div></div>' +
+    f('child','자녀명 (한글) *', (osState.receipt && osState.receipt.studentName) ? '영수증: '+osState.receipt.studentName : '홍길순') +
+    f('school','학교명 (한글)','홍콩중문대학교') + f('major','학과','유아교육학과') +
+    '<div><label>학제</label><select onchange="osState.newEmp.uniType=this.value; osRecalc();">'+['2','3','4','5'].map(v=>'<option value="'+v+'"'+(v===ut?' selected':'')+'>'+v+'년제'+(v==='5'?' (지원 최대 8학기)':'')+'</option>').join('')+'</select></div>' +
+    '<div><label>학년</label><select onchange="osState.newEmp.grade=this.value;">'+[1,2,3,4,5].map(v=>'<option value="'+v+'"'+(String(v)===String(n.grade||1)?' selected':'')+'>'+v+'학년</option>').join('')+'</select></div>' +
+    f('vendorCode','거래처코드','') + f('bank','은행','우리은행') + f('account','계좌번호','') + f('acctSeq','계좌순번','01');
+}
+function osSetEmpMode(m){ osState.empMode = m; osRenderEmp(); osRecalc(); }
+
+function osTargetEmp(){
+  if(osState.empMode==='existing') return employees.find(e=>e.id===osState.empId) || null;
+  const n = osState.newEmp;
+  if(!n.hire) return null;
+  return { id:'__os_new__', name:n.name||'', hire:n.hire, child:n.child||'', uniType:n.uniType||'4', level:'대학교' };
+}
+
+// ---------- 계산 ----------
+function osCompute(){
+  const r = osState.receipt || {items:[]};
+  const tuitionFx = r.items.filter(i=>i.cat==='tuition').reduce((s,i)=>s+i.amount,0);
+  const scholFx = r.items.filter(i=>i.cat==='scholarship').reduce((s,i)=>s+i.amount,0);
+  const excludedFx = r.items.filter(i=>i.cat==='excluded').reduce((s,i)=>s+i.amount,0);
+  const baseFx = Math.max(0, tuitionFx - scholFx);
+  const fx = osState.fx;
+  const baseWon = fx ? Math.round(baseFx * fx) : null;
+  const out = { tuitionFx, scholFx, excludedFx, baseFx, fx, baseWon, tuitionWon: fx?Math.round(tuitionFx*fx):null, scholWon: fx?Math.round(scholFx*fx):null, steps:[], warnings:[], finalWon:null };
+  const emp = osTargetEmp();
+  const year = osState.compYear, term = osState.compTerm;
+  if(!emp){ out.warnings.push('지급 대상 직원(입사일 포함)을 지정해야 상한을 계산할 수 있어요.'); return out; }
+  const info = annualRemainingInfo(emp, year, term);
+  out.yrs = info.yrs; out.tier = info.tier;
+  const semCapWon = info.tier.semiCap*10000, remainWon = Math.round(info.remaining*10000);
+  out.semCapWon = semCapWon; out.remainWon = remainWon; out.otherPaid = info.otherPaid; out.otherTerm = info.otherTerm;
+  if(isLegacy(year, term)) out.warnings.push(year+'년 '+term+'학기는 개정 규정 적용 전 학기예요. 회사 기준 학기를 다시 확인하세요.');
+  // 지원학기 체크
+  const limit = RULE.semLimit[emp.uniType] || 8;
+  const paidCount = payments.filter(x=>x.empId===emp.id && x.term!==undefined && x.status!=='leave' && !isLegacy(x.year,x.term) && !(x.year===year && x.term===term)).length;
+  out.semLimit = limit; out.semNo = paidCount + 1;
+  if(out.semNo > limit) out.warnings.push('지원학기 초과: 이번이 '+out.semNo+'번째 지원 (한도 '+limit+'학기).');
+  if(osState.approval.applyNo && osState.approval.applyNo !== out.semNo && emp.id!=='__os_new__') out.warnings.push('전자결재 신청회차('+osState.approval.applyNo+'회차)와 앱 기록상 회차('+out.semNo+'회차)가 달라요.');
+  if(!fx){
+    const breakeven = baseFx ? Math.min(semCapWon, remainWon) / baseFx : null;
+    out.warnings.push('환율을 입력하면 지급액이 확정돼요.' + (breakeven ? ' (환율이 '+osNum(breakeven,2)+'원 이상이면 수업료가 상한을 넘어 상한액 지급)' : ''));
+    return out;
+  }
+  const cands = [
+    {label:'지원대상 수업료 원화환산', v: baseWon},
+    {label:'학기당 상한 ('+tierLabel(info.tier)+')', v: semCapWon},
+    {label:'연간한도 잔여 ('+year+'년 '+info.otherTerm+'학기 기지급 '+fmtWon(info.otherPaid)+' 반영)', v: remainWon}
+  ];
+  if(osState.requestedWon) cands.push({label:'전자결재 신청금액', v: osState.requestedWon});
+  const minV = Math.min(...cands.map(c=>c.v));
+  out.steps = cands.map(c=>({label:c.label, v:c.v, pick: c.v===minV}));
+  out.finalWon = minV;
+  out.basis = cands.find(c=>c.v===minV).label;
+  if(osState.requestedWon && osState.requestedWon > minV) out.warnings.push('신청금액('+osState.requestedWon.toLocaleString()+'원)이 규정상 지급 가능액보다 커서 '+minV.toLocaleString()+'원으로 조정돼요.');
+  return out;
+}
+
+function osRecalc(){
+  if(!osState) return;
+  const c = osCompute();
+  const r = osState.receipt || {};
+  const cur = r.currency || '';
+  const termNote = document.getElementById('os_term_note');
+  const ap = osState.approval;
+  termNote.textContent = (r.term_en && osState.compTerm && ap.appTerm && ap.appTerm !== osState.compTerm)
+    ? '기안지에는 "'+(ap.appYear||'')+'년 '+ap.appTerm+'학기"로 적혀 있지만, 영수증 학기('+r.term_en+')가 '+(osState.compTerm===2?'가을(8~9월) 개강':'봄(1~2월) 개강')+'이라 회사 기준 '+osState.compYear+'년 '+osState.compTerm+'학기로 잡았어요. 필요하면 바꿔 주세요.'
+    : '';
+  let h = '<table class="os-calc-t">' +
+    '<tr><td>지원대상 수업료</td><td>'+cur+' '+osNum(c.tuitionFx,2)+'</td></tr>' +
+    (c.scholFx ? '<tr><td>(−) 장학금·감면</td><td>'+cur+' '+osNum(c.scholFx,2)+'</td></tr>' : '') +
+    '<tr><td>지원 제외 항목 (기숙사·보증금·학생회비 등)</td><td style="color:var(--sub);">'+cur+' '+osNum(c.excludedFx,2)+'</td></tr>' +
+    '<tr><td>지원 기준액</td><td><b>'+cur+' '+osNum(c.baseFx,2)+'</b>'+(c.fx?' × '+osNum(c.fx,4)+'원 = <b>'+osNum(c.baseWon,0)+'원</b>':'')+'</td></tr>' +
+    (c.fx && osState.fxSource ? '<tr><td>환율 출처</td><td style="color:var(--sub);">'+osEsc(osState.fxSource)+(osState.fxDate?' ('+osEsc(osState.fxDate)+')':'')+'</td></tr>' : '') +
+    (c.tier ? '<tr><td>근속 구간</td><td>근속 '+c.yrs+'년 · '+tierLabel(c.tier)+' · 연 '+c.tier.annual+'만원 / 학기당 '+c.tier.semiCap+'만원</td></tr>' +
+      '<tr><td>지원학기</td><td>'+c.semNo+' / '+c.semLimit+'학기 '+(c.semNo>c.semLimit?'<span class="pill over">초과</span>':'<span class="pill ok">이내</span>')+'</td></tr>' : '') +
+    '</table>';
+  if(c.steps.length){
+    h += '<div class="os-steps">' + c.steps.map(s=>'<div class="os-step'+(s.pick?' pick':'')+'"><div>'+osEsc(s.label)+'</div><b>'+s.v.toLocaleString()+'원</b></div>').join('') + '</div>' +
+      '<div class="os-final">지급액 <b>'+c.finalWon.toLocaleString()+'원</b> <span style="font-size:12px; font-weight:400; color:var(--sub);">— 위 금액 중 가장 작은 값 ('+osEsc(c.basis)+')</span>' +
+      (osState.requestedWon ? (osState.requestedWon===c.finalWon ? ' <span class="pill ok">신청금액과 일치</span>' : ' <span class="pill over">신청금액과 다름</span>') : '') + '</div>';
+  }
+  h += c.warnings.map(w=>'<div style="font-size:12px; color:#a56b00; margin-top:6px;">⚠ '+osEsc(w)+'</div>').join('');
+  document.getElementById('os_calc').innerHTML = h;
+  return c;
+}
+
+// ---------- 환율 ----------
+async function osFetchFx(){
+  const cur = (osState.receipt||{}).currency;
+  if(!cur){ alert('통화를 먼저 지정해주세요.'); return; }
+  const el = document.getElementById('os_fx');
+  el.placeholder = '조회 중...';
+  try{
+    const res = await fetch('https://open.er-api.com/v6/latest/'+cur);
+    const j = await res.json();
+    if(!j.rates || !j.rates.KRW) throw new Error('KRW 환율 없음');
+    osState.fx = Math.round(j.rates.KRW*10000)/10000;
+    osState.fxSource = 'open.er-api.com 시장환율 (참고용 — 송금일 은행 매매기준율로 바꿔도 됩니다)';
+    osState.fxDate = (j.time_last_update_utc||'').replace(/ \d{2}:\d{2}:\d{2}.*$/,'');
+    osState.fxFetched = osState.fx; osState.fxSourceFetched = osState.fxSource;
+    el.value = osState.fx;
+    osRecalc();
+  } catch(err){
+    el.placeholder = '직접 입력';
+    alert('환율을 자동으로 불러오지 못했어요 ('+err.message+'). 송금일 은행 매매기준율을 직접 입력해 주세요.');
+  }
+}
+
+// ---------- Claude 판독 ----------
+async function osRunAI(){
+  if(!osState.files.length){ alert('먼저 영수증·전자결재 파일을 올려주세요.'); return; }
+  const btn = document.getElementById('os_ai_btn');
+  btn.disabled = true; btn.textContent = '판독 중...';
+  osSetStatus('🤖 Claude가 증빙을 읽고 번역하는 중이에요 (10~30초).');
+  const content = osState.files.filter(f=>f.b64).map(f=> f.type==='application/pdf'
+    ? {type:'document', source:{type:'base64', media_type:'application/pdf', data:f.b64}}
+    : {type:'image', source:{type:'base64', media_type:f.type, data:f.b64}});
+  content.push({type:'text', text:
+`첨부는 한국 회사 직원 자녀의 해외 대학 학비 영수증과(또는) 사내 전자결재 "학자금지급신청서" 캡처입니다.
+회사 학자금 규정: "수업료"만 지원대상. 항목 이름이 아니라 성격으로 판단하세요. 판단 기준은 "강의·학점 이수의 대가로 내는 돈인가".
+- tuition(지원): Tuition, 학점당 수업료(credit hour/unit), Instruction/Academic fee, 전공별 추가 수업료(Differential tuition), 영수증에 별도 Tuition이 없을 때의 Course/Programme fee(영국·호주식 학비 본체)
+- scholarship(차감): 장학금·감면·waiver·discount
+- excluded(제외): College Fee(운영 부담금), Registration/Enrollment fee(행정 수수료), 기숙사비, 모든 보증금(Caution money/Deposit), 학생회비, 활동비, 보험·의료, 식비, 교재비, 실험실습비, 전산·시설·서비스 부담금, 전형료, 오리엔테이션, 연체료. 수업료와 기타비용이 한 금액으로 합쳐진 항목, 수업료 예치금(Tuition deposit, 이중 지급 위험)도 제외하고 check=true.
+- payment: 납부·환불 기록
+애매하면 excluded로 두고 check=true, why에 이유를 쓰세요.
+다음 JSON 하나만 출력하세요(설명·마크다운 금지):
+{"receipt":{"studentName":"영문 이름","studentId":"","school_en":"","school_ko":"한국에서 통용되는 한글 학교명","program_en":"","program_ko":"한글 학과명 (학위, 전일제 등)","term_en":"영수증에 적힌 학기","term_ko":"한글 학기 설명(개강월 포함)","companyYear":2026,"companyTerm":2,"receiptDate":"","currency":"ISO 통화코드","statedTotal":0,
+"items":[{"desc_en":"원문 항목명","desc_ko":"한글 번역(약어 풀이 포함)","amount":0,"cat":"tuition|scholarship|excluded|payment","why":"규정 기준 한 줄 판단 근거","check":false}]},
+"approval":{"empName":"기안자(신청 직원) 이름","title":"직급","hire":"YYYY-MM-DD","childName":"자녀 한글 이름","schoolKo":"","majorKo":"","uniType":"학제 숫자","applyNo":0,"totalSem":0,"requestedWon":0,"bank":"","account":"","appYear":0,"appTerm":0}}
+규칙: companyTerm은 한국 회사 기준 학기로, 8~12월 개강 학기는 그 해 2학기, 1~6월 개강 학기는 그 해 1학기. amount는 양수 숫자. 영수증이나 전자결재가 없으면 해당 객체 값은 빈 값으로 두세요.`});
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000, messages:[{role:'user', content}] })
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    const text = (data.content||[]).map(b=>b.type==='text'?b.text:'').join('');
+    const j = JSON.parse(text.replace(/```json|```/g,'').trim());
+    const rc = j.receipt || {};
+    if(rc.items && rc.items.length){
+      const items = rc.items.map(it=>({ desc_en:it.desc_en||'', desc_ko:it.desc_ko||'', amount:Math.abs(parseFloat(it.amount)||0),
+        cat: OS_CAT_LABEL[it.cat] ? it.cat : 'excluded', why: it.why||'', check: !!it.check }));
+      osState.receipt = { source:'ai', studentName:rc.studentName||'', studentId:rc.studentId||'', school_en:rc.school_en||'', school_ko:rc.school_ko||'',
+        program_en:rc.program_en||'', program_ko:rc.program_ko||'', term_en:rc.term_en||'', term_ko:rc.term_ko||'',
+        compYear: parseInt(rc.companyYear)||null, compTerm: parseInt(rc.companyTerm)||null, receiptDate:rc.receiptDate||'',
+        currency: rc.currency||'USD', statedTotal: rc.statedTotal ? parseFloat(rc.statedTotal) : null, items, notes:[] };
+      osAfterReceipt();
+    }
+    const ap = j.approval || {};
+    const clean = {};
+    Object.keys(ap).forEach(k=>{ if(ap[k]!=='' && ap[k]!==0 && ap[k]!==null) clean[k] = ap[k]; });
+    if(clean.uniType) clean.uniType = String(clean.uniType).replace(/\D/g,'');
+    ['applyNo','totalSem','requestedWon','appYear','appTerm'].forEach(k=>{ if(clean[k]) clean[k] = parseInt(String(clean[k]).replace(/[^0-9]/g,'')); });
+    osApplyApproval(clean);
+    osShowSections();
+    osSetStatus('✅ Claude 판독 완료 — 번역·분류를 한 번 훑어보고 환율을 넣어주세요.');
+  } catch(err){
+    osSetStatus('⚠ Claude 판독을 쓸 수 없는 환경이에요 ('+osEsc(err.message)+'). Claude 대화창 안에서 이 앱을 열었을 때만 동작해요. PDF 영수증 기본 판독 결과와 전자결재 텍스트 붙여넣기로 진행해 주세요.');
+  } finally {
+    btn.disabled = false; btn.textContent = '🤖 Claude로 판독·번역';
+  }
+}
+
+// ---------- 번역 정리표 (엑셀 시트 / 인쇄 공용 데이터) ----------
+function osBuildOverseasRecord(c){
+  const r = osState.receipt;
+  return { currency:r.currency, fx:c.fx, fxSource:osState.fxSource, fxDate:osState.fxDate,
+    studentName:r.studentName, studentId:r.studentId, school_en:r.school_en, school_ko:r.school_ko,
+    program_en:r.program_en, program_ko:r.program_ko, term_en:r.term_en, term_ko:r.term_ko, receiptDate:r.receiptDate,
+    statedTotal:r.statedTotal, items:r.items.map(i=>Object.assign({}, i)),
+    tuitionFx:c.tuitionFx, scholFx:c.scholFx, excludedFx:c.excludedFx, baseFx:c.baseFx, baseWon:c.baseWon,
+    tuitionWon:c.tuitionWon, scholWon:c.scholWon, steps:c.steps, finalWon:c.finalWon, basis:c.basis,
+    requestedWon:osState.requestedWon, compYear:osState.compYear, compTerm:osState.compTerm };
+}
+
+function osTranslationAoa(ov, empName, childName){
+  const cur = ov.currency;
+  const aoa = [
+    ['해외 대학 학비 영수증 번역 및 학자금 규정 적용표'],
+    [],
+    ['직원명', empName||'', '자녀명', childName||''],
+    ['학생명(영문)', ov.studentName||'', '학번', ov.studentId||''],
+    ['학교', (ov.school_ko||'')+(ov.school_en?' ('+ov.school_en+')':'')],
+    ['전공', (ov.program_ko||'')+(ov.program_en?' ('+ov.program_en+')':'')],
+    ['학기', (ov.term_ko||'')+(ov.term_en?' ('+ov.term_en+')':''), '회사 기준', ov.compYear+'년 '+ov.compTerm+'학기'],
+    ['영수증 일자', ov.receiptDate||'', '통화', cur],
+    [],
+    ['원문 항목','한글 번역','금액('+cur+')','원화 환산(원)','구분','판단 근거']
+  ];
+  ov.items.forEach(i=>aoa.push([i.desc_en, i.desc_ko, i.amount, ov.fx?Math.round(i.amount*ov.fx):'', OS_CAT_LABEL[i.cat]||i.cat, i.why||'']));
+  const charges = ov.items.filter(i=>i.cat==='tuition'||i.cat==='excluded').reduce((s,i)=>s+i.amount,0);
+  aoa.push(['청구 합계','', charges, ov.fx?Math.round(charges*ov.fx):'', ov.statedTotal!==null&&ov.statedTotal!==undefined?('영수증 TOTAL '+ov.statedTotal):'' ,'']);
+  aoa.push([]);
+  aoa.push(['규정 적용']);
+  aoa.push(['지원대상 수업료', '', ov.tuitionFx, ov.tuitionWon||'']);
+  if(ov.scholFx) aoa.push(['(−) 장학금·감면', '', ov.scholFx, ov.scholWon||'']);
+  aoa.push(['지원 기준액', '', ov.baseFx, ov.baseWon||'']);
+  aoa.push(['적용 환율', ov.fx ? (ov.fx+'원/'+cur) : '미입력', ov.fxSource||'', ov.fxDate||'']);
+  (ov.steps||[]).forEach(s=>aoa.push([s.label, s.pick?'◀ 적용':'', '', s.v]));
+  aoa.push(['최종 지급액', ov.basis||'', '', ov.finalWon||'']);
+  return aoa;
+}
+
+function osSheetFromAoa(aoa){
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols'] = [{wch:30},{wch:34},{wch:16},{wch:16},{wch:20},{wch:36}];
+  for(let r=0; r<aoa.length; r++){
+    [2,3].forEach(col=>{ const a = XLSX.utils.encode_cell({r, c:col}); if(ws[a] && typeof ws[a].v==='number') ws[a].z = col===2 ? '#,##0.00' : '#,##0'; });
+  }
+  return ws;
+}
+
+function osCurrentNames(){
+  const emp = osState.empMode==='existing' ? employees.find(e=>e.id===osState.empId) : osState.newEmp;
+  return { empName: emp ? (emp.name||'') : '', childName: emp ? (emp.child||'') : '' };
+}
+
+function osDownloadTranslation(){
+  if(typeof XLSX === 'undefined'){ alert('엑셀 생성 라이브러리를 불러오지 못했어요.'); return; }
+  const c = osRecalc();
+  const ov = osBuildOverseasRecord(c);
+  const nm = osCurrentNames();
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, osSheetFromAoa(osTranslationAoa(ov, nm.empName, nm.childName)), '해외영수증_번역');
+  XLSX.writeFile(wb, '해외영수증_번역_'+(nm.empName||'')+'_'+(nm.childName||'')+'_'+ov.compYear+'_'+ov.compTerm+'학기.xlsx');
+}
+
+function osPrint(){
+  const c = osRecalc();
+  const ov = osBuildOverseasRecord(c);
+  const nm = osCurrentNames();
+  const cur = ov.currency;
+  const rows = ov.items.map(i=>'<tr class="'+i.cat+'"><td>'+osEsc(i.desc_en)+'</td><td>'+osEsc(i.desc_ko)+'</td><td class="n">'+osNum(i.amount,2)+'</td><td>'+osEsc(OS_CAT_LABEL[i.cat])+'</td><td>'+osEsc(i.why)+'</td></tr>').join('');
+  const steps = (ov.steps||[]).map(s=>'<tr><td>'+osEsc(s.label)+'</td><td class="n">'+s.v.toLocaleString()+'원'+(s.pick?' ◀':'')+'</td></tr>').join('');
+  const html = '<html><head><meta charset="utf-8"><title>해외 영수증 번역</title><style>body{font-family:"Malgun Gothic",sans-serif;font-size:12px;color:#111;margin:24px;}h1{font-size:17px;text-align:center;margin:0 0 16px;}table{width:100%;border-collapse:collapse;margin-bottom:14px;}td,th{border:1px solid #888;padding:5px 7px;vertical-align:top;}th{background:#eee;}.n{text-align:right;white-space:nowrap;}.k{background:#f4f4f4;width:16%;}tr.tuition td{font-weight:bold;}tr.excluded td,tr.payment td{color:#666;}.final{font-size:14px;font-weight:bold;}</style></head><body>' +
+    '<h1>해외 대학 학비 영수증 번역 및 학자금 규정 적용표</h1>' +
+    '<table><tr><td class="k">직원명</td><td>'+osEsc(nm.empName)+'</td><td class="k">자녀명</td><td>'+osEsc(nm.childName)+' ('+osEsc(ov.studentName)+')</td></tr>' +
+    '<tr><td class="k">학교</td><td colspan="3">'+osEsc(ov.school_ko)+' ('+osEsc(ov.school_en)+')</td></tr>' +
+    '<tr><td class="k">전공</td><td colspan="3">'+osEsc(ov.program_ko)+' ('+osEsc(ov.program_en)+')</td></tr>' +
+    '<tr><td class="k">학기</td><td>'+osEsc(ov.term_ko)+'</td><td class="k">회사 기준</td><td>'+ov.compYear+'년 '+ov.compTerm+'학기</td></tr>' +
+    '<tr><td class="k">영수증 일자</td><td>'+osEsc(ov.receiptDate)+'</td><td class="k">학번</td><td>'+osEsc(ov.studentId)+'</td></tr></table>' +
+    '<table><tr><th>원문 항목</th><th>한글 번역</th><th>금액('+cur+')</th><th>구분</th><th>판단 근거</th></tr>'+rows+'</table>' +
+    '<table><tr><td class="k" style="width:45%">지원대상 수업료</td><td class="n">'+cur+' '+osNum(ov.tuitionFx,2)+'</td></tr>' +
+    (ov.scholFx?'<tr><td class="k">(−) 장학금·감면</td><td class="n">'+cur+' '+osNum(ov.scholFx,2)+'</td></tr>':'') +
+    '<tr><td class="k">지원 기준액 × 환율</td><td class="n">'+cur+' '+osNum(ov.baseFx,2)+(ov.fx?' × '+ov.fx+'원 = '+osNum(ov.baseWon,0)+'원':' (환율 미입력)')+'</td></tr>' +
+    steps + (ov.finalWon!==null?'<tr><td class="k final">최종 지급액</td><td class="n final">'+ov.finalWon.toLocaleString()+'원</td></tr>':'') + '</table>' +
+    '<div style="color:#555;">작성: 총무팀 · '+todayStr()+(ov.fxSource?' · 환율 출처: '+osEsc(ov.fxSource):'')+'</div></body></html>';
+  const fr = document.createElement('iframe');
+  fr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
+  document.body.appendChild(fr);
+  fr.contentDocument.open(); fr.contentDocument.write(html); fr.contentDocument.close();
+  setTimeout(()=>{ fr.contentWindow.focus(); fr.contentWindow.print(); setTimeout(()=>fr.remove(), 1500); }, 300);
+}
+
+// ---------- 지급 등록 ----------
+// 입력칸 값을 상태에 다시 반영 (붙여넣기·자동완성처럼 change 이벤트가 안 생기는 경우 대비)
+function osSyncInputs(){
+  const fxRaw = (document.getElementById('os_fx').value||'').replace(/,/g,'').match(/\d+(?:\.\d+)?/);
+  const fxVal = fxRaw ? parseFloat(fxRaw[0]) : null;
+  if(fxVal !== osState.fx){ osState.fx = fxVal; osState.fxSource = (fxVal && fxVal === osState.fxFetched) ? osState.fxSourceFetched : '직접 입력'; if(fxVal !== osState.fxFetched) osState.fxDate = ''; }
+  const req = parseInt((document.getElementById('os_req').value||'').replace(/[^0-9]/g,''));
+  osState.requestedWon = req || null;
+  const y = parseInt(document.getElementById('os_comp_year').value); if(y) osState.compYear = y;
+  osState.compTerm = parseInt(document.getElementById('os_comp_term').value) || osState.compTerm;
+  const h = document.getElementById('os_new_hire'); if(h && h.value) osState.newEmp.hire = h.value;
+  document.querySelectorAll('#os_emp_new input').forEach(inp=>{ const m = (inp.getAttribute('onchange')||'').match(/newEmp\['(\w+)'\]/); if(m && inp.value) osState.newEmp[m[1]] = inp.value; });
+}
+
+function osSave(){
+  osSyncInputs();
+  const c = osRecalc();
+  const missing = [];
+  if(!c.fx) missing.push('적용 환율');
+  if(osState.empMode==='existing' && !osState.empId) missing.push('지급 대상 직원·자녀 선택');
+  if(osState.empMode==='new'){
+    const n = osState.newEmp;
+    if(!n.name) missing.push('직원명'); if(!n.hire) missing.push('입사일'); if(!n.child) missing.push('자녀명(한글)');
+  }
+  if(!c.tuitionFx) missing.push('영수증 수업료 항목(구분이 "수업료"인 행)');
+  if(missing.length){
+    alert('지급 등록 전에 아래 항목을 채워주세요:\n- '+missing.join('\n- '));
+    const firstEmpty = missing.includes('입사일') ? document.getElementById('os_new_hire') : (missing.includes('적용 환율') ? document.getElementById('os_fx') : null);
+    if(firstEmpty){ firstEmpty.scrollIntoView({block:'center'}); firstEmpty.focus(); }
+    return;
+  }
+  if(c.finalWon===null){ alert('지급액을 계산하지 못했어요. 환율·입사일을 다시 확인해주세요.'); return; }
+  if(!c.finalWon){ alert('지급액이 0원이에요. 영수증 구분(수업료)을 확인해주세요.'); return; }
+  let emp;
+  if(osState.empMode==='existing'){
+    emp = employees.find(e=>e.id===osState.empId);
+    if(!emp){ alert('지급 대상 직원·자녀를 선택해주세요.'); return; }
+  } else {
+    const n = osState.newEmp;
+    if(!n.name || !n.hire || !n.child){ alert('신규 등록: 직원명·입사일·자녀명은 꼭 입력해주세요.'); return; }
+    const grade = parseInt(n.grade||1);
+    emp = { id: uid(), name:n.name.trim(), hire:n.hire, child:n.child.trim(), level:'대학교', uniType:n.uniType||'4', grade,
+      note: [n.school, n.major].filter(Boolean).join(' ') + ' ('+grade+'학년)' + ((n.uniType==='5')?' · 5년제(지원 8학기)':''),
+      title:n.title||'', vendorCode:n.vendorCode||'', bank:n.bank||'', account:n.account||'', acctSeq:n.acctSeq||'', overseas:true };
+    employees.push(emp);
+    STORE[currentCompany].employees = employees;
+  }
+  if(c.warnings.some(w=>/지원학기 초과/.test(w)) && !confirm('지원학기 한도를 넘었어요. 그래도 등록할까요?')) return;
+  const year = osState.compYear, term = osState.compTerm;
+  const ov = osBuildOverseasRecord(c);
+  const amount = c.finalWon/10000;
+  let pay = payments.find(p=>p.empId===emp.id && p.year===year && p.term===term);
+  if(pay){
+    if(!confirm('이미 '+year+'년 '+term+'학기 지급 내역('+fmtWon(pay.amount)+')이 있어요. '+c.finalWon.toLocaleString()+'원으로 덮어쓸까요?')) return;
+    pay.amount = amount; pay.overseas = ov; delete pay.status;
+  } else {
+    pay = { id: uid(), empId: emp.id, year, term, amount, overseas: ov };
+    payments.push(pay);
+  }
+  STORE[currentCompany].payments = payments;
+  closeOsModal();
+  renderEmp(); renderPay(); populateSummaryYearSelectors(); renderSummary();
+  setPayFilter('대학교'); switchTab('payments');
+  downloadVoucherPack(pay.id);
+}
+
+// ===================== 저장 (이 PC 브라우저에 자동 저장) =====================
+// 예전 버전은 화면을 새로 열면 입력한 내용이 사라졌다. 이제 바뀔 때마다 브라우저 저장소에 저장하고,
+// 새 버전 HTML을 열어도 저장된 내용 + 새로 들어간 기본 데이터를 합쳐서 보여준다.
+const SAVE_KEY = 'tuitionApp_store_v1_dummy';
+let saveWarned = false;
+function saveStore(){
+  STORE[currentCompany].employees = employees;
+  STORE[currentCompany].payments = payments;
+  try{
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ savedAt: new Date().toISOString(), store: STORE }));
+    const el = document.getElementById('saveStatus');
+    if(el) el.textContent = '자동 저장됨 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  } catch(e){
+    if(!saveWarned){ saveWarned = true; alert('이 브라우저에서는 자동 저장이 안 돼요 ('+e.message+'). 작업 후 "백업 받기"로 파일을 꼭 저장해 주세요.'); }
+  }
+}
+function mergeStore(base, saved){
+  Object.keys(saved||{}).forEach(co=>{
+    if(!base[co]){ base[co] = saved[co]; return; }
+    const sv = saved[co], bs = base[co];
+    const deleted = new Set(sv.deleted||[]);
+    const seedEmps = bs.employees.filter(e=>!deleted.has(e.id) && !sv.employees.some(x=>x.id===e.id));
+    const seedPays = bs.payments.filter(p=>!deleted.has(p.id) && !sv.payments.some(x=>x.id===p.id));
+    bs.employees = sv.employees.concat(seedEmps);
+    bs.payments = sv.payments.concat(seedPays);
+    bs.deleted = sv.deleted || [];
+  });
+}
+function loadStore(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    mergeStore(STORE, JSON.parse(raw).store);
+    employees = STORE[currentCompany].employees;
+    payments = STORE[currentCompany].payments;
+  } catch(e){ console.warn('저장 데이터 불러오기 실패', e); }
+}
+function markDeleted(ids){
+  const co = STORE[currentCompany];
+  co.deleted = (co.deleted||[]).concat(ids);
+}
+function downloadBackup(){
+  saveStore();
+  const blob = new Blob([JSON.stringify({ savedAt:new Date().toISOString(), store:STORE }, null, 1)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = '학자금관리_백업_'+todayCompact()+'.json'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function restoreBackup(file){
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const j = JSON.parse(r.result);
+      if(!j.store) throw new Error('백업 파일 형식이 아니에요');
+      if(!confirm('백업 파일('+(j.savedAt||'').slice(0,10)+')로 지금 데이터를 바꿀까요?')) return;
+      Object.keys(j.store).forEach(co=>{ STORE[co] = j.store[co]; });
+      employees = STORE[currentCompany].employees; payments = STORE[currentCompany].payments;
+      saveStore(); renderEmp(); renderPay(); populateSummaryYearSelectors(); renderSummary();
+      alert('백업을 불러왔어요.');
+    } catch(e){ alert('불러오기 실패: '+e.message); }
+  };
+  r.readAsText(file);
+}
+
+loadStore();
+renderCompanySwitch();
+renderEmp();
+renderPay();
+populateSummaryYearSelectors();
+renderSummary();
 </script>
 </body>
 </html>
