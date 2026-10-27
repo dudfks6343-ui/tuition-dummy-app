@@ -104,6 +104,8 @@
   .tblsearch{width:100%; max-width:320px; height:34px; padding:0 12px; border:1px solid var(--line); border-radius:8px; font-size:13px; margin:0 0 10px;}
   .tblcount{font-size:12px; color:var(--sub); margin-left:10px;}
   @media(max-width:700px){.statgrid{grid-template-columns:repeat(2,1fr);} .tab{padding:8px 10px; font-size:13px;}}
+  .os-fab{position:fixed; right:22px; bottom:22px; z-index:40; height:46px; padding:0 20px; border:0; border-radius:23px; background:var(--navy); color:#fff; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(15,42,74,.35);}
+  .os-fab:hover{background:#17406e;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -2645,5 +2647,6 @@ renderSummary();
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
+<button class="os-fab" onclick="switchTab('payments'); openOsModal();">🌏 해외 영수증 업로드</button>
 </body>
 </html>
